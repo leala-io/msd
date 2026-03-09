@@ -1,0 +1,547 @@
+{
+  "msd_version": "0.1.0",
+  "last_updated": "2026-03-09T00:00:00Z",
+  "ttl": 86400,
+
+  "_comment": "EXAMPLE FILE — based on publicly available data from mybuxi.ch/emmental (accessed 2026-03-09) and the stop list PDF dated 2026-02-01. Provider IDs and legal entity details are illustrative. This file serves as a real-world stress test for the MSD-CH data model.",
+
+  "_schema_notes": {
+    "identified_gaps": [
+      "FARE CONDITIONALITY: MSD v0.1.0 lacks a mechanism for conditional fare lists based on user group membership (Vereinsmitglied, Gemeindezugehörigkeit, Partner). The two-list system (grüne/rote Liste) requires a fare_group or fare_eligibility concept that scopes entire fare structures to user categories beyond simple discounts.",
+      "GROUP PRICING: The 'rote Liste' charges per trip for up to 6 persons (CHF 25-40). MSD has no concept of group fares where a single price covers multiple passengers.",
+      "SUBSCRIPTION PRODUCTS: Tageskarte, 10er-Karte, Monatsabo, Jahresabo (personal and transferable) are product types not modelled in MSD. The current fare_structures model covers single-trip pricing but not subscription/pass products.",
+      "PARTNER TARIFF: Trips to/from partner locations have a fixed reduced fare (CHF 5/10). This is a location-conditional fare not expressible in the current zone-crossing model.",
+      "STOP-BASED SERVICE AREA: mybuxi operates 335 named stops, not zone polygons. MSD service_area.type supports 'zones' but the stop-list model needs validation.",
+      "COMMUNITY FUNDING MODEL: The distinction between publicly co-funded municipalities (Affoltern, Heimiswil) and non-funded municipalities drives the entire fare structure. This is a governance/funding dimension not modelled in MSD.",
+      "HALBTAX/GA NON-ACCEPTANCE: mybuxi explicitly does NOT accept Swiss PT credentials. MSD needs a way to declare credential non-acceptance, not just acceptance."
+    ]
+  },
+
+  "provider": {
+    "provider_id": "ch:1:sboid:100342",
+    "name": "mybuxi Emmental",
+    "description": "On-demand community transport service in the Emmental region, operated by volunteers",
+    "url": "https://mybuxi.ch/emmental/",
+    "contact_email": "emmental@mybuxi.ch",
+    "country": "CH",
+    "languages": ["de", "fr", "it", "en"],
+    "legal_entity": {
+      "name": "mybuxi AG",
+      "registration_id": "CHE-XXX.XXX.XXX",
+      "vat_id": null,
+      "_comment": "mybuxi AG is the parent company; day-to-day operations in Emmental are managed by Verein mybuxi Emmental"
+    },
+    "swiss_profile": {
+      "go_nummer": "100342",
+      "sboid": "ch:1:sboid:100342",
+      "tu_verzeichnis": false,
+      "konzession_typ": null,
+      "_comment": "mybuxi Emmental is not concessioned (keine Konzession). Not subsidised by canton or federal government. Funded by fare revenue, municipal contributions (Affoltern, Heimiswil), and private partners."
+    }
+  },
+
+  "services": [
+    {
+      "service_id": "emmental-ondemand",
+      "service_type": "on_demand",
+      "name": "mybuxi Emmental On-Demand",
+      "mode": "bus",
+      "swiss_profile": {
+        "slnid": null,
+        "service_category": "on_demand_non_concessioned"
+      },
+      "operating_hours": {
+        "default": [
+          { "days": ["mo", "tu", "we", "th"], "start": "05:25", "end": "00:00" },
+          { "days": ["fr"], "start": "05:25", "end": "01:30" },
+          { "days": ["sa"], "start": "07:30", "end": "01:30" },
+          { "days": ["su"], "start": "08:30", "end": "22:00" }
+        ],
+        "exceptions": [
+          {
+            "rule": "Allgemeine Sonn- & Feiertage: Sonntagsbetrieb",
+            "_comment": "Public holidays follow Sunday schedule. MSD v0.1.0 lacks a holiday_rule concept — this is expressed as free text."
+          }
+        ]
+      },
+      "service_area": {
+        "type": "stops",
+        "municipalities": [
+          "Affoltern i.E.",
+          "Heimiswil",
+          "Burgdorf",
+          "Oberburg",
+          "Hasle b.B.",
+          "Rüegsau",
+          "Lützelflüh",
+          "Sumiswald",
+          "Dürrenroth",
+          "Wynigen"
+        ],
+        "stops_count": 335,
+        "stops_url": "https://mybuxi.ch/wp-content/uploads/2026/01/2026-02-01-Haltepunkte_mybuxi-Emmental.pdf",
+        "stops_sample": [
+          {
+            "stop_id": "mybuxi:AF:schaukaeserei",
+            "name": "Affoltern i.E. – Emmentaler Schaukäserei",
+            "municipality": "Affoltern i.E.",
+            "type": "stop",
+            "is_partner_stop": true,
+            "coordinates": { "lat": 47.06416, "lon": 7.73154 }
+          },
+          {
+            "stop_id": "mybuxi:BU:spital",
+            "name": "Burgdorf – Spital Emmental",
+            "municipality": "Burgdorf",
+            "type": "stop",
+            "is_partner_stop": true,
+            "coordinates": { "lat": 47.04835, "lon": 7.62188 }
+          },
+          {
+            "stop_id": "mybuxi:BU:bahnhof",
+            "name": "Burgdorf – Bahnhof (BLS)",
+            "municipality": "Burgdorf",
+            "type": "stop",
+            "is_partner_stop": false,
+            "coordinates": { "lat": 47.06044, "lon": 7.62129 }
+          },
+          {
+            "stop_id": "mybuxi:HE:pfrundschuur",
+            "name": "Heimiswil – Pfrundschüür",
+            "municipality": "Heimiswil",
+            "type": "stop",
+            "is_partner_stop": false,
+            "coordinates": { "lat": 47.06562, "lon": 7.66017 }
+          },
+          {
+            "stop_id": "mybuxi:WY:bahnhof",
+            "name": "Wynigen – Bahnhof (SBB)",
+            "municipality": "Wynigen",
+            "type": "stop",
+            "is_partner_stop": false,
+            "coordinates": { "lat": 47.10482, "lon": 7.66325 }
+          }
+        ],
+        "_comment": "Full stop list (335 stops) available at stops_url. Stops are grouped by municipality prefix (AF=Affoltern, BU=Burgdorf, DÜ=Dürrenroth, HA=Hasle, HE=Heimiswil, LÜ=Lützelflüh, OB=Oberburg, RÜ=Rüegsau, SU=Sumiswald, WY=Wynigen). Stops marked with * in the original list are partner or key stops."
+      },
+      "vehicles": [
+        {
+          "vehicle_type_id": "minibus-electric",
+          "name": "Electric Minibus",
+          "capacity": { "seats": 8, "wheelchair": 0 },
+          "propulsion": "electric",
+          "count": null,
+          "_comment": "Exact fleet size not publicly documented"
+        }
+      ],
+      "accessibility": {
+        "wheelchair_accessible_vehicles": false,
+        "audio_announcements": false,
+        "booking_assistance_available": true,
+        "animals_policy": "Assistenzhunde mit Ausweis und Tiere in einem Korb sind gestattet",
+        "_comment": "Accessibility details not fully documented on website"
+      }
+    }
+  ],
+
+  "fare_structures": [
+    {
+      "fare_id": "gruene-liste",
+      "name": "Grüne Liste — vergünstigter Tarif",
+      "description": "Reduced fares for: residents of co-funding municipalities (Affoltern i.E., Heimiswil), members of Verein mybuxi Emmental or other mybuxi associations, and trips to/from partner locations",
+      "service_ids": ["emmental-ondemand"],
+      "currency": "CHF",
+      "eligibility": {
+        "requires_any_of": [
+          { "type": "municipality_residence", "municipalities": ["Affoltern i.E.", "Heimiswil"] },
+          { "type": "membership", "organisation": "Verein mybuxi Emmental" },
+          { "type": "membership", "organisation": "any mybuxi Verein" },
+          { "type": "partner_trip", "description": "Trip origin or destination is a partner stop" }
+        ]
+      },
+      "rules": [
+        {
+          "description": "Einzelfahrt Erwachsene (ab 26) — 1 Zone",
+          "conditions": { "zone_crossing": 0, "user_category": "adult_26plus" },
+          "price": 6.00
+        },
+        {
+          "description": "Einzelfahrt Erwachsene (ab 26) — 2 Zonen",
+          "conditions": { "zone_crossing": 1, "user_category": "adult_26plus" },
+          "price": 8.00
+        },
+        {
+          "description": "Einzelfahrt Erwachsene (ab 26) — 3 Zonen",
+          "conditions": { "zone_crossing": 2, "user_category": "adult_26plus" },
+          "price": 10.00
+        },
+        {
+          "description": "Einzelfahrt Erwachsene (ab 26) — 4 Zonen",
+          "conditions": { "zone_crossing": 3, "user_category": "adult_26plus" },
+          "price": 12.00
+        },
+        {
+          "description": "Einzelfahrt Jugendliche (bis 25) — 1 Zone",
+          "conditions": { "zone_crossing": 0, "user_category": "youth_under_26" },
+          "price": 4.00
+        },
+        {
+          "description": "Einzelfahrt Jugendliche (bis 25) — 2 Zonen",
+          "conditions": { "zone_crossing": 1, "user_category": "youth_under_26" },
+          "price": 5.00
+        },
+        {
+          "description": "Einzelfahrt Jugendliche (bis 25) — 3 Zonen",
+          "conditions": { "zone_crossing": 2, "user_category": "youth_under_26" },
+          "price": 6.00
+        },
+        {
+          "description": "Einzelfahrt Jugendliche (bis 25) — 4 Zonen",
+          "conditions": { "zone_crossing": 3, "user_category": "youth_under_26" },
+          "price": 7.00
+        }
+      ],
+      "products": [
+        {
+          "product_id": "tageskarte-jugend-gruen",
+          "name": "Tageskarte Jugendliche",
+          "type": "day_pass",
+          "price": 15.00,
+          "conditions": { "user_category": "youth_under_26" }
+        },
+        {
+          "product_id": "tageskarte-erwachsen-gruen",
+          "name": "Tageskarte Erwachsene",
+          "type": "day_pass",
+          "price": 30.00,
+          "conditions": { "user_category": "adult_26plus" }
+        },
+        {
+          "product_id": "10er-jugend-1zone-gruen",
+          "name": "10er-Karte Jugendliche 1 Zone",
+          "type": "multi_ride",
+          "rides": 10,
+          "price": 40.00,
+          "conditions": { "zone_crossing": 0, "user_category": "youth_under_26" }
+        },
+        {
+          "product_id": "10er-erwachsen-1zone-gruen",
+          "name": "10er-Karte Erwachsene 1 Zone",
+          "type": "multi_ride",
+          "rides": 10,
+          "price": 60.00,
+          "conditions": { "zone_crossing": 0, "user_category": "adult_26plus" }
+        },
+        {
+          "product_id": "monatsabo-jugend-gruen",
+          "name": "Monatsabo persönlich Jugendliche",
+          "type": "monthly_pass",
+          "price": 90.00,
+          "transferable": false,
+          "conditions": { "user_category": "youth_under_26" }
+        },
+        {
+          "product_id": "monatsabo-erwachsen-gruen",
+          "name": "Monatsabo persönlich Erwachsene",
+          "type": "monthly_pass",
+          "price": 120.00,
+          "transferable": false,
+          "conditions": { "user_category": "adult_26plus" }
+        },
+        {
+          "product_id": "jahresabo-jugend-gruen",
+          "name": "Jahresabo persönlich Jugendliche",
+          "type": "annual_pass",
+          "price": 730.00,
+          "transferable": false,
+          "conditions": { "user_category": "youth_under_26" }
+        },
+        {
+          "product_id": "jahresabo-erwachsen-gruen",
+          "name": "Jahresabo persönlich Erwachsene",
+          "type": "annual_pass",
+          "price": 999.00,
+          "transferable": false,
+          "conditions": { "user_category": "adult_26plus" }
+        },
+        {
+          "product_id": "monatsabo-unpers-gruen",
+          "name": "Monatsabo unpersönlich",
+          "type": "monthly_pass",
+          "price": 180.00,
+          "transferable": true
+        },
+        {
+          "product_id": "jahresabo-unpers-gruen",
+          "name": "Jahresabo unpersönlich",
+          "type": "annual_pass",
+          "price": 1499.00,
+          "transferable": true,
+          "_comment": "Holders of unpersönliches Jahresabo receive a free stop at their address"
+        }
+      ],
+      "discounts": [
+        {
+          "discount_id": "free-child-accompanied",
+          "name": "Kinder und Jugendliche bis 16 Jahre",
+          "type": "free",
+          "conditions": {
+            "age_max": 16,
+            "note": "Gratis in Begleitung von Erwachsenen. Kinder bis 12 müssen von einer erwachsenen Person begleitet werden oder eine schriftliche Einverständniserklärung vorweisen."
+          }
+        },
+        {
+          "discount_id": "group-fare",
+          "name": "Gruppentarif",
+          "type": "flat",
+          "price": 40.00,
+          "conditions": {
+            "minimum_passengers": 4,
+            "note": "Ab vier Personen: CHF 40.00 pro Fahrt und Bus"
+          },
+          "_schema_gap": "Group fares (flat price per vehicle regardless of zone) are not modelled in MSD v0.1.0"
+        }
+      ],
+      "credential_acceptance": {
+        "ch:halbtax": false,
+        "ch:ga": false,
+        "ch:verbund:libero": false,
+        "_comment": "Die Fahrkarten des öffentlichen Verkehrs gelten bei uns (noch) nicht.",
+        "_schema_gap": "MSD v0.1.0 models credential-based discounts but has no mechanism to explicitly declare non-acceptance of standard credentials"
+      },
+      "payment_methods": ["cash_in_vehicle", "app", "webshop", "invoice"],
+      "sales_points": [
+        { "type": "vehicle", "products": ["single_trip", "day_pass", "multi_ride"] },
+        { "type": "physical", "name": "Emmentaler Schaukäserei", "products": ["multi_ride", "monthly_pass", "annual_pass"] },
+        { "type": "email", "address": "finance@mybuxi.ch" },
+        { "type": "webshop", "url": "https://mybuxi-market.ch/#/products/65ccc065ab239302bc09ed4e" }
+      ],
+      "vat_rate": null,
+      "vat_included": true
+    },
+    {
+      "fare_id": "rote-liste",
+      "name": "Rote Liste — Normaltarif",
+      "description": "Standard fares for all other trips: non-member, non-partner, outside co-funding municipalities",
+      "service_ids": ["emmental-ondemand"],
+      "currency": "CHF",
+      "eligibility": {
+        "default": true,
+        "_comment": "This fare structure applies when none of the grüne Liste eligibility conditions are met"
+      },
+      "rules": [
+        {
+          "description": "Einzelfahrt bis 6 Personen — 1 Zone",
+          "conditions": { "zone_crossing": 0, "max_passengers": 6 },
+          "price": 25.00
+        },
+        {
+          "description": "Einzelfahrt bis 6 Personen — 2 Zonen",
+          "conditions": { "zone_crossing": 1, "max_passengers": 6 },
+          "price": 30.00
+        },
+        {
+          "description": "Einzelfahrt bis 6 Personen — 3 Zonen",
+          "conditions": { "zone_crossing": 2, "max_passengers": 6 },
+          "price": 35.00
+        },
+        {
+          "description": "Einzelfahrt bis 6 Personen — 4 Zonen",
+          "conditions": { "zone_crossing": 3, "max_passengers": 6 },
+          "price": 40.00
+        }
+      ],
+      "products": [
+        {
+          "product_id": "tageskarte-jugend-rot",
+          "name": "Tageskarte Jugendliche",
+          "type": "day_pass",
+          "price": 25.00,
+          "conditions": { "user_category": "youth_under_26" }
+        },
+        {
+          "product_id": "tageskarte-erwachsen-rot",
+          "name": "Tageskarte Erwachsene",
+          "type": "day_pass",
+          "price": 50.00,
+          "conditions": { "user_category": "adult_26plus" }
+        },
+        {
+          "product_id": "monatsabo-jugend-rot",
+          "name": "Monatsabo persönlich Jugendliche",
+          "type": "monthly_pass",
+          "price": 120.00,
+          "transferable": false,
+          "conditions": { "user_category": "youth_under_26" }
+        },
+        {
+          "product_id": "monatsabo-erwachsen-rot",
+          "name": "Monatsabo persönlich Erwachsene",
+          "type": "monthly_pass",
+          "price": 150.00,
+          "transferable": false,
+          "conditions": { "user_category": "adult_26plus" }
+        },
+        {
+          "product_id": "jahresabo-jugend-rot",
+          "name": "Jahresabo persönlich Jugendliche",
+          "type": "annual_pass",
+          "price": 1095.00,
+          "transferable": false,
+          "conditions": { "user_category": "youth_under_26" }
+        },
+        {
+          "product_id": "jahresabo-erwachsen-rot",
+          "name": "Jahresabo persönlich Erwachsene",
+          "type": "annual_pass",
+          "price": 1460.00,
+          "transferable": false,
+          "conditions": { "user_category": "adult_26plus" }
+        },
+        {
+          "product_id": "monatsabo-unpers-rot",
+          "name": "Monatsabo unpersönlich",
+          "type": "monthly_pass",
+          "price": 240.00,
+          "transferable": true
+        },
+        {
+          "product_id": "jahresabo-unpers-rot",
+          "name": "Jahresabo unpersönlich",
+          "type": "annual_pass",
+          "price": 1800.00,
+          "transferable": true
+        }
+      ],
+      "discounts": [
+        {
+          "discount_id": "free-child-accompanied-rot",
+          "name": "Kinder und Jugendliche bis 16 Jahre",
+          "type": "free",
+          "conditions": {
+            "age_max": 16,
+            "note": "Gratis in Begleitung von Erwachsenen"
+          }
+        }
+      ],
+      "payment_methods": ["cash_in_vehicle", "app", "webshop", "invoice"]
+    }
+  ],
+
+  "booking_rules": {
+    "advance_booking": {
+      "minimum_minutes": null,
+      "maximum_days": null,
+      "_comment": "Booking constraints not publicly documented on website. Bookable via app."
+    },
+    "cancellation": {
+      "free_cancellation_minutes": null,
+      "late_cancellation_fee": null
+    },
+    "booking_channels": ["app", "phone", "email"],
+    "booking_confirmation": "immediate",
+    "passenger_identification": "none_required",
+    "special_requests": {
+      "group_bookings": "emmental@mybuxi.ch",
+      "special_destinations": "emmental@mybuxi.ch",
+      "_comment": "Fahrten mit Gruppen oder an Orte, die noch nicht erschlossen sind, können per Mail angefragt werden"
+    }
+  },
+
+  "settlement": {
+    "model": "mixed",
+    "description": "Cash in vehicle, prepaid via webshop/Schaukäserei, or invoice",
+    "billing_contact": "finance@mybuxi.ch",
+    "supported_settlement_protocols": ["cash", "prepaid", "invoice"],
+    "_comment": "mybuxi is not integrated into any MaaS platform. Settlement is direct between passenger and operator."
+  },
+
+  "routing_hints": {
+    "travel_time_factor": 1.3,
+    "travel_time_source": "gis_router",
+    "transfer_penalty_equivalent": 2,
+    "_comment": "Values are estimates. mybuxi is a volunteer-operated service with variable detour factors depending on pooling."
+  },
+
+  "references": {
+    "gtfs_feed_url": null,
+    "gbfs_feed_url": null,
+    "tomp_api_url": null,
+    "real_time_endpoint": null,
+    "info_url": "https://mybuxi.ch/emmental/",
+    "terms_url": null,
+    "webshop_url": "https://mybuxi-market.ch/#/products/65ccc065ab239302bc09ed4e",
+    "stop_list_url": "https://mybuxi.ch/wp-content/uploads/2026/01/2026-02-01-Haltepunkte_mybuxi-Emmental.pdf",
+    "price_list_url": "https://mybuxi.ch/wp-content/uploads/2026/01/2026-02-01-Fahrpreise_mybuxi-Emmental-V01.pdf"
+  },
+
+  "partners": [
+    {
+      "partner_id": "schaukaeserei",
+      "name": "Emmentaler Schaukäserei",
+      "stop_name": "Affoltern i.E. – Emmentaler Schaukäserei",
+      "reduced_fare": { "price": 5.00, "_comment": "Trips to/from partner at reduced rate" }
+    },
+    {
+      "partner_id": "spital-burgdorf",
+      "name": "Spital Burgdorf",
+      "stop_name": "Burgdorf – Spital Emmental"
+    },
+    {
+      "partner_id": "salvisberg",
+      "name": "Salvisberg Naturstein",
+      "stop_name": "Rüegsau – Salvisberg Naturstein"
+    },
+    {
+      "partner_id": "volg-weier",
+      "name": "Volg Weier im Emmental",
+      "stop_name": "Weiher i.E. – Volg"
+    },
+    {
+      "partner_id": "krone-rueegsbach",
+      "name": "Krone Rüegsbach",
+      "stop_name": "Rüegsbach – Gasthof Krone"
+    },
+    {
+      "partner_id": "thalsaege",
+      "name": "Restaurant Thalsäge",
+      "stop_name": "Lützelflüh-Goldbach – Restaurant Thalsäge"
+    },
+    {
+      "partner_id": "steingrube",
+      "name": "Wirtschaft Steingrube",
+      "stop_name": "Oberburg – Steingrube"
+    },
+    {
+      "partner_id": "baeren-duerrenroth",
+      "name": "Romantik Hotel Bären",
+      "stop_name": "Dürrenroth – Romantik Hotel Bären"
+    },
+    {
+      "partner_id": "buri-energie",
+      "name": "Buri Energie",
+      "stop_name": "Hasle b.B. – BURI AG Handwerker-Shop"
+    }
+  ],
+
+  "_schema_gap_summary": {
+    "critical": [
+      "Conditional fare eligibility (membership, residence, partner trip) — needs fare_group or fare_eligibility concept",
+      "Subscription products (day pass, multi-ride, monthly/annual pass, transferable vs personal) — needs subscriptions model",
+      "Group pricing (flat fare per vehicle up to N passengers) — needs group_fare concept",
+      "Credential non-acceptance declaration — needs negative credential mapping"
+    ],
+    "important": [
+      "Partner network with location-conditional fares — needs partners model or stop-level fare overrides",
+      "Holiday schedule rules (Sonntagsbetrieb an Feiertagen) — needs holiday_rule in operating_hours",
+      "Sales points / ticket distribution channels — needs sales_points model",
+      "Municipality-based zones (not geographic polygons) — zone definition needs administrative boundary support",
+      "Volunteer-operated service flag — provider metadata gap"
+    ],
+    "minor": [
+      "Overnight operating hours crossing midnight (05:25-00:00, 05:25-01:30) — time format needs 24h+ or next-day convention",
+      "Special request channel (email for groups, unserved destinations) — booking_rules extension",
+      "Stop acquisition model (Haltepunkt kaufen/erhalten) — outside MSD scope but notable"
+    ]
+  }
+}
