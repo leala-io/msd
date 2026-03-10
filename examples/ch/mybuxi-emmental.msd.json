@@ -128,12 +128,33 @@
         {
           "vehicle_type_id": "minibus-electric",
           "name": "Electric Minibus",
-          "capacity": { "seats": 8, "wheelchair": 0 },
+          "capacity": {
+            "seats": 8,
+            "wheelchair": 0,
+            "child_seats": 0,
+            "stroller_spaces": 1,
+            "luggage_capacity": "medium"
+          },
           "propulsion": "electric",
           "count": null,
-          "_comment": "Exact fleet size not publicly documented"
+          "_comment": "Exact fleet size not publicly documented. Capacity details are estimates based on vehicle type."
         }
       ],
+      "safety": {
+        "driver_identification": true,
+        "vehicle_tracking_available": true,
+        "trip_sharing_available": false,
+        "emergency_button": false,
+        "cctv_onboard": false,
+        "lit_pickup_points": false,
+        "safety_training_for_drivers": true,
+        "reporting_mechanism": {
+          "available": true,
+          "channels": ["email"],
+          "anonymous_reporting": false
+        },
+        "_comment": "Safety features are estimates. mybuxi drivers are identified volunteers. Reporting via emmental@mybuxi.ch. No dedicated safety app features documented."
+      },
       "accessibility": {
         "wheelchair_accessible_vehicles": false,
         "audio_announcements": false,
@@ -438,13 +459,25 @@
       "free_cancellation_minutes": null,
       "late_cancellation_fee": null
     },
-    "booking_channels": ["app", "phone", "email"],
+    "booking_channels": [
+      { "type": "app", "url": "https://mybuxi.ch/fahrgaeste/#App" },
+      { "type": "phone", "description": "For group bookings and special destinations" },
+      { "type": "email", "address": "emmental@mybuxi.ch", "description": "Fahrten mit Gruppen oder an Orte, die noch nicht erschlossen sind" }
+    ],
     "booking_confirmation": "immediate",
     "passenger_identification": "none_required",
-    "special_requests": {
-      "group_bookings": "emmental@mybuxi.ch",
-      "special_destinations": "emmental@mybuxi.ch",
-      "_comment": "Fahrten mit Gruppen oder an Orte, die noch nicht erschlossen sind, können per Mail angefragt werden"
+    "multi_stop": {
+      "supported": false,
+      "_comment": "Multi-stop trips not documented as supported. Standard point-to-point service."
+    },
+    "group_booking": {
+      "supported": true,
+      "max_group_size": 6,
+      "child_accompaniment_rules": {
+        "min_adult_age": 18,
+        "max_children_per_adult": null,
+        "_comment": "Kinder bis 12 Jahre müssen von einer erwachsenen Person begleitet werden oder eine schriftliche Einverständniserklärung der Erziehungsberechtigten vorweisen."
+      }
     }
   },
 
