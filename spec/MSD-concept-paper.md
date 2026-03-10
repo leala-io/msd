@@ -26,6 +26,8 @@ In multimodal mobility ecosystems, integrating a new service provider into a boo
 
 For large operators (national railways, urban transit authorities), this cost is justified by transaction volume. For small and medium providers — community buses, regional bike-sharing, on-demand shuttles, parking operators, car-sharing cooperatives — it is prohibitive. The result is a mobility landscape where the largest operators dominate digital platforms while smaller, often more innovative services remain invisible to multimodal journey planners and booking engines.
 
+This barrier is even more acute for the millions of informal transport operators worldwide — minibuses, motorcycle-taxis, shared ride services — that provide the majority of public transport in many cities across Africa, Asia, and Latin America (ITF, 2025). These services, which often arise from a bottom-up planning process to serve demand unmet by institutional public transport, currently have no standardised way to describe their offerings to journey planners, booking platforms, or public authorities.
+
 ### 1.2 The Standards Gap
 
 The current mobility data standards landscape covers substantial ground but leaves a critical gap:
@@ -178,18 +180,44 @@ Each service within a provider describes a distinct mobility offering:
         {
           "vehicle_type_id": "minibus-standard",
           "name": "Minibus",
-          "capacity": { "seats": 8, "wheelchair": 0 },
+          "capacity": {
+            "seats": 8,
+            "wheelchair": 0,
+            "child_seats": 2,
+            "stroller_spaces": 1,
+            "luggage_capacity": "medium"
+          },
           "propulsion": "electric",
           "count": 3
         },
         {
           "vehicle_type_id": "minibus-accessible",
           "name": "Minibus (accessible)",
-          "capacity": { "seats": 6, "wheelchair": 1 },
+          "capacity": {
+            "seats": 6,
+            "wheelchair": 1,
+            "child_seats": 1,
+            "stroller_spaces": 1,
+            "luggage_capacity": "medium"
+          },
           "propulsion": "electric",
           "count": 2
         }
       ],
+      "safety": {
+        "driver_identification": true,
+        "vehicle_tracking_available": true,
+        "trip_sharing_available": false,
+        "emergency_button": false,
+        "cctv_onboard": false,
+        "lit_pickup_points": false,
+        "safety_training_for_drivers": true,
+        "reporting_mechanism": {
+          "available": true,
+          "channels": ["app", "phone"],
+          "anonymous_reporting": true
+        }
+      },
       "accessibility": {
         "wheelchair_accessible_vehicles": true,
         "audio_announcements": false,
@@ -199,6 +227,10 @@ Each service within a provider describes a distinct mobility offering:
   ]
 }
 ```
+
+**Vehicle capacity** includes optional fields for `child_seats` (number of installed child seats), `stroller_spaces` (spaces for prams/buggies), and `luggage_capacity` (enumeration: `none`, `small`, `medium`, `large`). These fields address documented evidence from the ITF (International Transport Forum) that travel with children and luggage — predominantly undertaken by women — is systematically underserved by existing mobility data standards. NeTEx defines corresponding fields (`PushchairCapacity`, `LuggageCapacity` in PASSENGER CAPACITY) that MSD maps to directly.
+
+**The optional `safety` object** enables providers to declare safety-relevant features of their service. Research compiled by the ITF shows that safety is the dominant factor in transport mode choice for women — ahead of price, speed, or comfort. No existing mobility standard provides machine-readable safety declarations. The `safety` object covers driver identification, vehicle tracking, trip sharing (allowing passengers to share their live trip with trusted contacts), emergency features, CCTV, lighting at pickup points, driver training, and harassment reporting mechanisms. All fields are optional; the simplest valid MSD file has no `safety` object.
 
 ### 3.4 Service Constraints
 
@@ -409,12 +441,53 @@ This three-state model (accepted / rejected / undeclared) is important for consu
       "free_cancellation_minutes": 15,
       "late_cancellation_fee": 3.00
     },
-    "booking_channels": ["app", "phone", "web"],
+    "booking_channels": [
+      { "type": "app", "url": "https://mybuxi.ch/app" },
+      { "type": "phone", "number": "+41 34 123 45 67", "hours": "Mo-Fr 06:00-22:00", "languages": ["de", "fr"] },
+      { "type": "web", "url": "https://mybuxi.ch/booking" },
+      { "type": "in_person", "location": "Emmentaler Schaukäserei", "hours": "Mo-Sa 09:00-17:00" }
+    ],
     "booking_confirmation": "immediate",
-    "passenger_identification": "none_required"
+    "passenger_identification": "none_required",
+    "multi_stop": {
+      "supported": true,
+      "max_intermediate_stops": 3,
+      "max_wait_time_minutes": 10,
+      "passenger_change_allowed": true
+    },
+    "group_booking": {
+      "supported": true,
+      "max_group_size": 6,
+      "child_accompaniment_rules": {
+        "min_adult_age": 16,
+        "max_children_per_adult": 4
+      }
+    }
   }
 }
 ```
+
+**Structured booking channels:** The `booking_channels` field accepts either a simple string array (backward compatible: `["app", "phone"]`) or an array of channel objects with metadata such as phone numbers, opening hours, and language availability. ITF research documents a gender-specific digital divide in transport access — telephone and in-person booking channels are not legacy features but inclusion requirements. The structured format enables journey planners to display actionable booking information rather than bare channel names.
+
+**Multi-stop booking:** The optional `multi_stop` object declares whether the service supports trip chaining — picking up and dropping off passengers at intermediate stops within a single booking. This addresses the "Mobility of Care" pattern documented by the ITF: complex trip chains combining work, childcare, shopping, and escort trips that do not follow the commuter A-to-B model. `passenger_change_allowed` indicates whether passengers may board or alight at intermediate stops (relevant for shared rides).
+
+**Group booking:** The optional `group_booking` object declares group size limits and child accompaniment rules. `child_accompaniment_rules` specifies the minimum adult age for accompanying children and how many children may travel per adult — rules that most on-demand and community transport services have but currently communicate only in free-text terms and conditions.
+
+### 3.6.1 Transfer Policy
+
+The optional `transfer_policy` object within `fare_structures` declares how multi-modal or multi-leg trips are priced when passengers transfer between services or modes:
+
+```json
+{
+  "transfer_policy": {
+    "free_transfers_within_minutes": 60,
+    "max_transfers": 3,
+    "transfer_modes": ["bus", "sharing"]
+  }
+}
+```
+
+Research on the "Pink Tax in Transport" (NYU, cited by ITF) documents that complex trip patterns — predominantly undertaken by women — result in systematically higher transport costs when each leg is priced independently. The `transfer_policy` enables providers to declare transfer windows and eligible modes, allowing consuming engines to calculate integrated fares across trip chains. A provider declaring `"free_transfers_within_minutes": 60` signals that a passenger who arrives by on-demand bus and continues by bike-sharing within 60 minutes pays only once.
 
 ### 3.7 Settlement Parameters
 
@@ -501,6 +574,10 @@ MSD explicitly does not attempt to replace any existing standard. Instead, it oc
 
 A provider that already publishes GTFS need not create an MSD file for their scheduled services. But if the same provider also operates an on-demand shuttle that has no GTFS representation, MSD can describe that shuttle — and link back to the GTFS feed for the scheduled services.
 
+### 4.3 Complementary Data Ecosystems
+
+Several initiatives have mapped informal transport networks and published them as open GTFS data: Digital Transport 4 Africa (DT4A), DigitalMatatus in Nairobi, Transport for Cairo, and Mapatón CDMX. These efforts capture routes and stops but not service descriptions: fares, vehicle types, booking rules, and operating conditions. MSD complements these mapping efforts by providing the service description layer that GTFS cannot express. An informal transport operator whose routes have been mapped by DT4A could publish an MSD file describing fares, vehicle capacities, and booking channels — completing the information needed for multimodal integration.
+
 ---
 
 ## 5. Use Cases
@@ -520,6 +597,12 @@ A ticketing provider operating across multiple countries (e.g., Fairtiq in Switz
 ### 5.4 EU National Access Point Compliance
 
 EU Delegated Regulation 2017/1926 (MMTIS) requires Member States to make multimodal travel information accessible through National Access Points. MSD files, published alongside existing NeTEx/SIRI data, could cover demand-responsive and shared mobility services that are currently underrepresented in NAP data — helping countries meet their regulatory obligations for comprehensive multimodal information.
+
+### 5.5 Informal Transport Integration
+
+In cities across Africa, Asia, and Latin America, privately organised transport services — minibuses, motorcycle-taxis, shared rides — provide the majority of public transport trips. In Mexico City, including these services in accessibility calculations increases the reachable population within 30 minutes by 54%; in Bogotá by 35% (ITF, 2025). These services currently have no standardised way to describe what they offer. GTFS mapping initiatives (DigitalMatatus, DT4A, Transport for Cairo) capture routes and stops, but not service parameters: fares, booking rules, vehicle capacities, safety features, or operating conditions.
+
+MSD enables these providers — whether individual owner-operators, cooperatives, or app-based platforms — to publish a single JSON file describing their complete service offering. A transport authority integrating informal services into a formal network (as Jakarta did with Mikrotrans feeders for the Transjakarta BRT, or Mexico City's Semovi does through its modernisation program) could use MSD files as the standardised interface for service description, fare integration, and quality benchmarking — without requiring providers to build APIs.
 
 ---
 
@@ -573,6 +656,7 @@ MSD supports vendor extensions through a reserved `x-` prefix on field names. Ex
 - NeTEx mapping documentation
 - Engagement with EU NAPCORE and Swiss KOMODA/NADIM
 - Community contributions from international providers
+- Pilot application in informal transport contexts (in collaboration with DT4A, DigitalMatatus, or similar mapping initiatives)
 
 ---
 
@@ -681,6 +765,10 @@ This mapping is intentionally at the conceptual level. MSD is a simplified, JSON
 | Propulsion | `services[].vehicles[].propulsion` | PROPULSION TYPE | `VehicleType/PropulsionType` | NeTEx v2.0 added PropulsionType with values including electric, hydrogen, diesel, etc. |
 | Vehicle count | `services[].vehicles[].count` | (fleet management) | `FleetComposition` | Transmodel's fleet management is in Part 4 (Operations). MSD's simple count has no direct Transmodel equivalent at the planning level. |
 | Accessibility | `services[].accessibility` | ACCESSIBILITY ASSESSMENT | `AccessibilityAssessment` | Transmodel uses a detailed assessment model with ACCESSIBILITY LIMITATION per feature. MSD uses boolean flags as simplified representation. |
+| Child seats | `services[].vehicles[].capacity.child_seats` | PASSENGER CAPACITY | `PassengerCapacity` | No direct NeTEx equivalent at vehicle type level. MSD extension for care mobility. |
+| Stroller spaces | `services[].vehicles[].capacity.stroller_spaces` | PASSENGER CAPACITY.PushchairCapacity | `PassengerCapacity/PushchairCapacity` | Direct mapping to NeTEx. Santiago de Chile bus fleet redesign (ITF 2019) motivated this field. |
+| Luggage capacity | `services[].vehicles[].capacity.luggage_capacity` | PASSENGER CAPACITY.LuggageCapacity | `PassengerCapacity/LuggageCapacity` | Direct mapping to NeTEx. Enumeration: none, small, medium, large. |
+| Safety features | `services[].safety` | — | — | No Transmodel equivalent. MSD-specific extension addressing ITF evidence that safety is the dominant factor in transport mode choice for women. Covers driver identification, vehicle tracking, CCTV, emergency features, lighting, and harassment reporting mechanisms. |
 
 ### C.5 Fare Structures
 
@@ -709,8 +797,11 @@ This mapping is intentionally at the conceptual level. MSD is a simplified, JSON
 | Booking rules | `booking_rules` | BOOKING ARRANGEMENT | `BookingArrangements` | Transmodel defines BOOKING ARRANGEMENT on FLEXIBLE LINE or SERVICE JOURNEY with attributes for minimum/maximum booking period, booking methods, etc. |
 | Advance booking minimum | `booking_rules.advance_booking.minimum_minutes` | BOOKING ARRANGEMENT.MinimumBookingPeriod | `BookingArrangements/MinimumBookingPeriod` | NeTEx uses ISO 8601 duration (e.g., PT30M); MSD uses integer minutes |
 | Advance booking maximum | `booking_rules.advance_booking.maximum_days` | BOOKING ARRANGEMENT.LatestBookingTime | `BookingArrangements/LatestBookingTime` | Transmodel expresses this differently: as a latest time rather than a maximum period |
-| Booking channels | `booking_rules.booking_channels` | BOOKING METHOD | `BookingArrangements/BookingMethods` | NeTEx enumeration: callDriver, callOffice, online, phoneAtStop, text, etc. MSD values map to these. |
+| Booking channels | `booking_rules.booking_channels[]` | BOOKING METHOD | `BookingArrangements/BookingMethods` | MSD supports both simple string arrays and structured channel objects with phone numbers, hours, and languages. NeTEx enumeration: callDriver, callOffice, online, phoneAtStop, text, etc. MSD's structured format maps to BOOKING METHOD with additional CONTACT DETAILS. |
 | Cancellation rules | `booking_rules.cancellation` | CANCELLING / EXCHANGING (USAGE PARAMETER) | `Cancelling` / `Exchanging` | Transmodel models cancellation as a USAGE PARAMETER with detailed conditions. MSD uses a simplified fee-based model. |
+| Multi-stop booking | `booking_rules.multi_stop` | — | — | No direct Transmodel equivalent. Transmodel models SERVICE JOURNEYs with STOP POINTs but does not model on-demand multi-stop trip chaining as a booking concept. MSD-specific extension addressing the "Mobility of Care" pattern (ITF 2019). |
+| Group booking | `booking_rules.group_booking` | COMPANION PROFILE | `CompanionProfile` | MSD's group booking rules (max group size, child accompaniment) map conceptually to NeTEx's COMPANION PROFILE. MSD adds explicit accompaniment rules. |
+| Transfer policy | `fare_structures[].transfer_policy` | TRANSFERABILITY / INTERCHANGING | `Transferability` | Transmodel models transfer rules through INTERCHANGING (physical transfer between services) and TRANSFERABILITY (fare validity across transfers). MSD's `transfer_policy` combines both into a simplified declaration of free transfer windows and eligible modes. |
 
 ### C.7 Settlement
 
