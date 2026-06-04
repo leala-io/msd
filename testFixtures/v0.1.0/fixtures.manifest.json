@@ -1,0 +1,46 @@
+{
+  "description": "Maps each invalid fixture to the rule it violates. Each file contains exactly one violation, so a failure that disappears signals a regression in the schema.",
+  "schema": "schema/v0.1.0/msd.schema.json",
+  "valid": [
+    {
+      "file": "valid/minimal-valid.msd.json",
+      "exercises": "Only the required fields: msd_version, last_updated, provider{provider_id,name}, one service (service_id, service_type, name, mode, service_area with one zone)."
+    },
+    {
+      "file": "valid/full-valid.msd.json",
+      "exercises": "Every optional object: operating_hours (default + dated exceptions), vehicles, accessibility, service_area constraints, fare_structures with discounts (requires_credential: ch-halbtax), payment_methods, vat, booking_rules, settlement, routing_hints, references (incl. null values per C1)."
+    }
+  ],
+  "invalid": [
+    {
+      "file": "invalid/missing-required-provider.msd.json",
+      "violates": "Root 'provider' is required and is omitted.",
+      "expected_path": "(root)"
+    },
+    {
+      "file": "invalid/empty-services.msd.json",
+      "violates": "'services' has minItems: 1 but is an empty array.",
+      "expected_path": "/services"
+    },
+    {
+      "file": "invalid/bad-service_type.msd.json",
+      "violates": "service.service_type 'taxi' is not in the service_type registry code list (Convention C2).",
+      "expected_path": "/services/0/service_type"
+    },
+    {
+      "file": "invalid/price-as-string.msd.json",
+      "violates": "fare_structure rule 'price' must be a number; supplied as the string \"5.00\".",
+      "expected_path": "/fare_structures/0/rules/0/price"
+    },
+    {
+      "file": "invalid/bad-geometry.msd.json",
+      "violates": "zone geometry.type 'Circle' is not a permitted GeoJSON type (Polygon | MultiPolygon).",
+      "expected_path": "/services/0/service_area/zones/0/geometry/type"
+    },
+    {
+      "file": "invalid/bad-currency.msd.json",
+      "violates": "fare_structure.currency 'Franken' does not match the ISO 4217 pattern ^[A-Z]{3}$.",
+      "expected_path": "/fare_structures/0/currency"
+    }
+  ]
+}

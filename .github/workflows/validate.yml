@@ -1,0 +1,60 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install validator dependencies
+        working-directory: validator
+        run: npm ci
+
+      - name: Meta-validate schema against JSON Schema Draft 2020-12
+        run: |
+          node -e '
+            const fs = require("fs");
+            const Ajv = require("./validator/node_modules/ajv/dist/2020");
+            const addFormats = require("./validator/node_modules/ajv-formats");
+            const ajv = new Ajv({ allErrors: true, strict: false });
+            addFormats(ajv);
+            for (const f of fs.readdirSync("registry/v0.1.0")) {
+              if (f.endsWith(".json")) ajv.addSchema(JSON.parse(fs.readFileSync("registry/v0.1.0/" + f, "utf8")));
+            }
+            const root = JSON.parse(fs.readFileSync("schema/v0.1.0/msd.schema.json", "utf8"));
+            if (!ajv.validateSchema(root)) {
+              console.error(JSON.stringify(ajv.errors, null, 2));
+              process.exit(1);
+            }
+            console.log("schema is meta-valid (Draft 2020-12)");
+          '
+
+      - name: Examples and valid fixtures must PASS
+        run: |
+          set -e
+          for f in $(find examples testFixtures/v0.1.0/valid -name '*.msd.json' | sort); do
+            echo "::group::$f"
+            node validator/validate.js "$f"
+            echo "::endgroup::"
+          done
+
+      - name: Invalid fixtures must FAIL
+        run: |
+          fail=0
+          for f in $(find testFixtures/v0.1.0/invalid -name '*.msd.json' | sort); do
+            if node validator/validate.js "$f"; then
+              echo "ERROR: $f validated but should have been rejected"
+              fail=1
+            else
+              echo "OK (rejected): $f"
+            fi
+          done
+          exit $fail

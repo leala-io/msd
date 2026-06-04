@@ -41,6 +41,7 @@ MSD is a static JSON file that contains everything needed to discover, understan
 |----------|-------------|
 | [Concept Paper](spec/MSD-concept-paper.md) | Full technical vision, data model, and use cases |
 | [Governance Framework](spec/MSD-governance.md) | How MSD is governed: commitments, process, licensing |
+| [Conventions](CONVENTIONS.md) | C1 (null vs zero) and C2 (external code-list registry) |
 
 ## Status
 

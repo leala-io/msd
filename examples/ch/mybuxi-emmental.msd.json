@@ -57,12 +57,8 @@
           { "days": ["sa"], "start": "07:30", "end": "01:30" },
           { "days": ["su"], "start": "08:30", "end": "22:00" }
         ],
-        "exceptions": [
-          {
-            "rule": "Allgemeine Sonn- & Feiertage: Sonntagsbetrieb",
-            "_comment": "Public holidays follow Sunday schedule. MSD v0.1.0 lacks a holiday_rule concept — this is expressed as free text."
-          }
-        ]
+        "_holiday_rule": "Allgemeine Sonn- & Feiertage: Sonntagsbetrieb",
+        "_comment": "MSD v0.1.0 operating_hours.exceptions are date-keyed (Concept Paper §3.3); a recurring date-less holiday rule cannot be expressed and is carried here as a non-normative note. Logged as a v0.2.0 candidate (docs/v0.2.0-candidates.md §B.2)."
       },
       "service_area": {
         "type": "stops",
@@ -80,7 +76,8 @@
         ],
         "stops_count": 335,
         "stops_url": "https://mybuxi.ch/wp-content/uploads/2026/01/2026-02-01-Haltepunkte_mybuxi-Emmental.pdf",
-        "stops_sample": [
+        "_stops_note": "Representative sample of the 335-stop list (full list at stops_url, count at stops_count). Renamed from 'stops_sample' to satisfy the v0.1.0 requirement that service_area.type='stops' carry a 'stops' array (Concept Paper Appendix D.1). See docs/v0.2.0-candidates.md §C.",
+        "stops": [
           {
             "stop_id": "mybuxi:AF:schaukaeserei",
             "name": "Affoltern i.E. – Emmentaler Schaukäserei",
@@ -459,11 +456,13 @@
       "free_cancellation_minutes": null,
       "late_cancellation_fee": null
     },
-    "booking_channels": [
-      { "type": "app", "url": "https://mybuxi.ch/fahrgaeste/#App" },
-      { "type": "phone", "description": "For group bookings and special destinations" },
-      { "type": "email", "address": "emmental@mybuxi.ch", "description": "Fahrten mit Gruppen oder an Orte, die noch nicht erschlossen sind" }
-    ],
+    "booking_channels": ["app", "phone", "email"],
+    "_booking_channels_detail": {
+      "_comment": "MSD v0.1.0 models booking_channels as a code-list string array (Concept Paper §3.6). The richer per-channel detail below is retained as a non-normative extension and logged as a v0.2.0 candidate (docs/v0.2.0-candidates.md §B.1).",
+      "app": { "url": "https://mybuxi.ch/fahrgaeste/#App" },
+      "phone": { "description": "For group bookings and special destinations" },
+      "email": { "address": "emmental@mybuxi.ch", "description": "Fahrten mit Gruppen oder an Orte, die noch nicht erschlossen sind" }
+    },
     "booking_confirmation": "immediate",
     "passenger_identification": "none_required",
     "multi_stop": {

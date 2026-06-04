@@ -1,0 +1,18 @@
+{
+  "name": "msd-validator",
+  "version": "0.1.0",
+  "description": "Reference validator for MSD (Mobility Service Description) v0.1.0 files",
+  "license": "AGPL-3.0",
+  "private": true,
+  "type": "commonjs",
+  "bin": {
+    "msd-validate": "validate.js"
+  },
+  "scripts": {
+    "validate": "node validate.js"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "msd_version": "0.1.0",
+  "last_updated": "2026-06-04T10:00:00Z",
+  "ttl": 86400,
+  "provider": {
+    "provider_id": "example-full",
+    "name": "Example Full Provider",
+    "description": "A provider exercising every optional MSD v0.1.0 object.",
+    "url": "https://example.org",
+    "contact_email": "info@example.org",
+    "country": "CH",
+    "languages": ["de", "fr"],
+    "legal_entity": {
+      "name": "Example Genossenschaft",
+      "registration_id": "CHE-123.456.789",
+      "vat_id": null
+    }
+  },
+  "services": [
+    {
+      "service_id": "svc-full",
+      "service_type": "on_demand",
+      "name": "Example On-Demand (full)",
+      "mode": "bus",
+      "operating_hours": {
+        "default": [
+          { "days": ["mo", "tu", "we", "th", "fr"], "start": "06:00", "end": "22:00" },
+          { "days": ["sa", "su"], "start": "08:00", "end": "20:00" }
+        ],
+        "exceptions": [
+          { "date": "2026-12-25", "closed": true },
+          { "date": "2026-08-01", "start": "10:00", "end": "18:00" }
+        ]
+      },
+      "service_area": {
+        "type": "zones",
+        "zones": [
+          {
+            "zone_id": "zone-nord",
+            "name": "Nord",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[7.58, 46.95], [7.65, 46.95], [7.65, 47.00], [7.58, 47.00], [7.58, 46.95]]]
+            }
+          },
+          {
+            "zone_id": "zone-sued",
+            "name": "Süd",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[7.58, 46.90], [7.65, 46.90], [7.65, 46.95], [7.58, 46.95], [7.58, 46.90]]]
+            }
+          }
+        ],
+        "constraints": [
+          {
+            "type": "relation_restriction",
+            "description": "No intra-town-centre trips.",
+            "origin_zone": "zone-nord",
+            "destination_zone": "zone-nord",
+            "rule": "deny"
+          },
+          {
+            "type": "service_mode_restriction",
+            "description": "Stop-based pickup only within the town centre.",
+            "zone": "zone-nord",
+            "pickup_type": "stop_only"
+          }
+        ]
+      },
+      "vehicles": [
+        {
+          "vehicle_type_id": "minibus-standard",
+          "name": "Minibus",
+          "capacity": { "seats": 8, "wheelchair": 0 },
+          "propulsion": "electric",
+          "count": 3
+        },
+        {
+          "vehicle_type_id": "minibus-accessible",
+          "name": "Minibus (accessible)",
+          "capacity": { "seats": 6, "wheelchair": 1 },
+          "propulsion": "electric",
+          "count": null
+        }
+      ],
+      "accessibility": {
+        "wheelchair_accessible_vehicles": true,
+        "audio_announcements": false,
+        "booking_assistance_available": true
+      }
+    }
+  ],
+  "fare_structures": [
+    {
+      "fare_id": "standard-zone",
+      "service_ids": ["svc-full"],
+      "currency": "CHF",
+      "rules": [
+        {
+          "description": "Single trip within one zone",
+          "conditions": { "zone_crossing": 0 },
+          "price": 5.00
+        },
+        {
+          "description": "Single trip crossing one zone boundary",
+          "conditions": { "zone_crossing": 1 },
+          "price": 8.00
+        }
+      ],
+      "discounts": [
+        {
+          "discount_id": "half-fare",
+          "name": "Swiss Half-Fare Card",
+          "type": "percentage",
+          "value": 50,
+          "conditions": {
+            "requires_credential": "ch-halbtax",
+            "applicable_to": ["standard-zone"]
+          }
+        },
+        {
+          "discount_id": "free-child",
+          "name": "Children under 6",
+          "type": "free",
+          "conditions": {
+            "age_max": 5,
+            "note": "Free when accompanied by a paying adult"
+          }
+        }
+      ],
+      "payment_methods": ["invoice", "twint", "credit_card"],
+      "vat_rate": 7.7,
+      "vat_included": true
+    }
+  ],
+  "booking_rules": {
+    "advance_booking": { "minimum_minutes": 30, "maximum_days": 7 },
+    "cancellation": { "free_cancellation_minutes": 15, "late_cancellation_fee": 3.00 },
+    "booking_channels": ["app", "phone", "web"],
+    "booking_confirmation": "immediate",
+    "passenger_identification": "none_required"
+  },
+  "settlement": {
+    "model": "postpaid",
+    "settlement_period": "monthly",
+    "commission_structure": {
+      "type": "percentage",
+      "value": 5.0,
+      "note": "Platform commission on ticket revenue"
+    },
+    "billing_contact": "billing@example.org",
+    "supported_settlement_protocols": ["invoice", "sepa"]
+  },
+  "routing_hints": {
+    "travel_time_factor": 1.2,
+    "travel_time_source": "gis_router",
+    "transfer_penalty_equivalent": 2,
+    "line_service_preference": {
+      "threshold_minutes": 10,
+      "minimum_advantage_percent": 20,
+      "description": "Only suggest if at least 20% faster than a scheduled connection within 10 minutes."
+    }
+  },
+  "references": {
+    "gtfs_feed_url": null,
+    "gbfs_feed_url": null,
+    "tomp_api_url": null,
+    "real_time_endpoint": "https://api.example.org/v1/availability",
+    "info_url": "https://example.org/fahrplan",
+    "terms_url": "https://example.org/agb"
+  }
+}

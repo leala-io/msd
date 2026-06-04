@@ -1,0 +1,20 @@
+# Pre-commit hooks for MSD.
+#
+# Blueprint §6 specifies a `check-jsonschema` hook. That hook cannot be used here:
+# the structural schema references its code lists by absolute `$id`
+# (Convention C2), and those registry schemas are registered *programmatically*
+# at validation time (see validator/validate.js). check-jsonschema has no
+# mechanism to register sibling schemas by $id and would attempt to fetch the
+# https:// $ids over the network. The reference Node validator is therefore the
+# authoritative gate, used identically by pre-commit and CI.
+repos:
+  - repo: local
+    hooks:
+      - id: msd-validate
+        name: MSD schema validation (reference validator)
+        entry: node validator/validate.js
+        language: system
+        files: '^(examples/.*\.msd\.json|testFixtures/v0\.1\.0/valid/.*\.msd\.json)$'
+        description: >-
+          Validate every changed example and valid fixture against
+          schema/v0.1.0/msd.schema.json. Requires `npm ci` in validator/ once.

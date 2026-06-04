@@ -1,0 +1,6 @@
+# Node dependencies (reference validator)
+node_modules/
+
+# Logs and OS cruft
+*.log
+.DS_Store

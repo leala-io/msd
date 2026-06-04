@@ -1,0 +1,42 @@
+{
+  "msd_version": "0.1.0",
+  "last_updated": "2026-06-04T10:00:00Z",
+  "provider": {
+    "provider_id": "example",
+    "name": "Example Provider"
+  },
+  "services": [
+    {
+      "service_id": "svc-1",
+      "service_type": "on_demand",
+      "name": "Example Service",
+      "mode": "bus",
+      "service_area": {
+        "type": "zones",
+        "zones": [
+          {
+            "zone_id": "zone-a",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [[[7.58, 46.95], [7.65, 46.95], [7.65, 47.00], [7.58, 47.00], [7.58, 46.95]]]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "fare_structures": [
+    {
+      "fare_id": "standard",
+      "service_ids": ["svc-1"],
+      "currency": "CHF",
+      "rules": [
+        {
+          "description": "Single trip",
+          "conditions": { "zone_crossing": 0 },
+          "price": "5.00"
+        }
+      ]
+    }
+  ]
+}
