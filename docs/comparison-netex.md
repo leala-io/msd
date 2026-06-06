@@ -15,9 +15,9 @@ mybuxi is a small, zone-based demand-responsive service. The same service can be
 | Validation | One open-source reference validator (AJV) | The full NeTEx XSD (`NeTEx_publication.xsd`) plus XML tooling |
 | Authoring | The provider edits one JSON file | Modelled in the NeTEx/Transmodel data model, typically with NeTEx expertise |
 
-¹ **Two NeTEx representations of mybuxi, both citable.**
-   **(1) Production (recommended anchor — current, verifiable).** mybuxi is part of the national on-demand NeTEx export *(Beta) Angebotsplan NeTEx für On-Demand-Verkehre* (`netex_tt_odv`), published by Geschäftsstelle SKI on opentransportdata.swiss and refreshed roughly twice a week. The export covers all Swiss demand-responsive services (`…GE16614_01_DIVA_odv_ALL_prod_…`, i.e. CEN/TS 16614 / NeTEx). To confirm and extract the mybuxi portion, download the latest resource and search the unzipped XML for the operator. Dataset: `https://data.opentransportdata.swiss/dataset/netex_tt_odv`.
-   **(2) Illustrative (CEN example).** A single-service mybuxi DRT example also exists in the CEN-NeTEx Alternative-Modes examples (`examples/functions/newModes/`); it is not on the current `master`/`v1.3` release, so it is most likely part of the open new-modes pull request. To pin it: open that PR → *Files changed* → locate the Swiss/mybuxi DRT example → *Copy permalink* and note the line count.
+¹ **Two NeTEx representations of mybuxi.**
+   **(1) Production (primary reference).** mybuxi is part of the national on-demand NeTEx export *(Beta) Angebotsplan NeTEx für On-Demand-Verkehre* (`netex_tt_odv`), published by Geschäftsstelle SKI on opentransportdata.swiss and refreshed roughly twice a week, covering all Swiss demand-responsive services (file prefix `GE16614_01_DIVA_odv_ALL_prod_…`, i.e. CEN/TS 16614 / NeTEx). Dataset: `https://data.opentransportdata.swiss/dataset/netex_tt_odv`.
+   **(2) Illustrative.** A single-service mybuxi DRT example also exists among the CEN-NeTEx Alternative-Modes examples (`examples/functions/newModes/`), associated with the ongoing new-modes work.
 
 ## The layer relationship
 
