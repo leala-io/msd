@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://leala.io/msd/schema/v0.1.0/msd.schema.json",
+  "$id": "https://leala-io.github.io/msd/schema/v0.1.0/msd.schema.json",
   "title": "MSD — Mobility Service Description (v0.1.0)",
   "description": "Structural schema for a single MSD document. Data model = Concept Paper §3 (3.1-3.9). Code-list values are external (Convention C2): every enumerated field $refs a file under registry/v0.1.0/. The schema is intentionally open (additionalProperties is not set to false) so provider extensions and national-profile fields validate as pass-through; the §3 core (types, required fields, geometry) is validated strictly. null is permitted on optional scalars to mean 'unknown' (Convention C1) — it is never equivalent to 0/false/[].",
   "type": "object",
@@ -81,9 +81,9 @@
       "required": ["service_id", "service_type", "name", "mode", "service_area"],
       "properties": {
         "service_id": { "type": "string" },
-        "service_type": { "$ref": "https://leala.io/msd/registry/v0.1.0/service_type.json" },
+        "service_type": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/service_type.json" },
         "name": { "type": "string" },
-        "mode": { "$ref": "https://leala.io/msd/registry/v0.1.0/mode.json" },
+        "mode": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/mode.json" },
         "operating_hours": { "$ref": "#/$defs/operating_hours" },
         "service_area": { "$ref": "#/$defs/service_area" },
         "vehicles": {
@@ -209,7 +209,7 @@
       "description": "Concept Paper §3.4. Negative/restrictive service logic within a service area.",
       "required": ["type"],
       "properties": {
-        "type": { "$ref": "https://leala.io/msd/registry/v0.1.0/constraint_type.json" },
+        "type": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/constraint_type.json" },
         "description": { "type": "string" },
         "origin_zone": { "type": "string" },
         "destination_zone": { "type": "string" },
@@ -241,7 +241,7 @@
             }
           }
         },
-        "propulsion": { "$ref": "https://leala.io/msd/registry/v0.1.0/propulsion.json" },
+        "propulsion": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/propulsion.json" },
         "count": {
           "type": ["integer", "null"],
           "minimum": 0,
@@ -285,7 +285,7 @@
         },
         "payment_methods": {
           "type": "array",
-          "items": { "$ref": "https://leala.io/msd/registry/v0.1.0/payment_method.json" }
+          "items": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/payment_method.json" }
         },
         "vat_rate": {
           "type": ["number", "null"],
@@ -318,7 +318,7 @@
       "properties": {
         "discount_id": { "type": "string" },
         "name": { "type": "string" },
-        "type": { "$ref": "https://leala.io/msd/registry/v0.1.0/discount_type.json" },
+        "type": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/discount_type.json" },
         "value": {
           "type": ["number", "null"],
           "description": "Discount magnitude (percent for 'percentage', absolute for 'fixed'). Not required for 'free'. null means unknown (C1)."
@@ -363,10 +363,10 @@
         },
         "booking_channels": {
           "type": "array",
-          "items": { "$ref": "https://leala.io/msd/registry/v0.1.0/booking_channel.json" }
+          "items": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/booking_channel.json" }
         },
-        "booking_confirmation": { "$ref": "https://leala.io/msd/registry/v0.1.0/booking_confirmation.json" },
-        "passenger_identification": { "$ref": "https://leala.io/msd/registry/v0.1.0/passenger_identification.json" }
+        "booking_confirmation": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/booking_confirmation.json" },
+        "passenger_identification": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/passenger_identification.json" }
       }
     },
 
@@ -374,12 +374,12 @@
       "type": "object",
       "description": "Concept Paper §3.7.",
       "properties": {
-        "model": { "$ref": "https://leala.io/msd/registry/v0.1.0/settlement_model.json" },
-        "settlement_period": { "$ref": "https://leala.io/msd/registry/v0.1.0/settlement_period.json" },
+        "model": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/settlement_model.json" },
+        "settlement_period": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/settlement_period.json" },
         "commission_structure": {
           "type": "object",
           "properties": {
-            "type": { "$ref": "https://leala.io/msd/registry/v0.1.0/commission_type.json" },
+            "type": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/commission_type.json" },
             "value": { "type": ["number", "null"], "minimum": 0 },
             "note": { "type": "string" }
           }
@@ -387,7 +387,7 @@
         "billing_contact": { "type": "string", "format": "email" },
         "supported_settlement_protocols": {
           "type": "array",
-          "items": { "$ref": "https://leala.io/msd/registry/v0.1.0/settlement_protocol.json" }
+          "items": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/settlement_protocol.json" }
         }
       }
     },
@@ -397,7 +397,7 @@
       "description": "Concept Paper §3.9. Advisory hints for multimodal journey-planning integration.",
       "properties": {
         "travel_time_factor": { "type": "number", "minimum": 0 },
-        "travel_time_source": { "$ref": "https://leala.io/msd/registry/v0.1.0/travel_time_source.json" },
+        "travel_time_source": { "$ref": "https://leala-io.github.io/msd/registry/v0.1.0/travel_time_source.json" },
         "transfer_penalty_equivalent": { "type": ["integer", "null"], "minimum": 0 },
         "line_service_preference": {
           "type": "object",
