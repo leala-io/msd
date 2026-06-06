@@ -1,0 +1,207 @@
+{
+  "$schema": "https://leala-io.github.io/msd/schema/v0.1.0/msd.schema.json",
+  "msd_version": "0.1.0",
+  "last_updated": "2026-06-06T00:00:00Z",
+  "ttl": 86400,
+
+  "_comment": "EXAMPLE FILE — HYPOTHETICAL. This is NOT a description of a real, named operator. It models a generic Kampala minibus-taxi (matatu) SACCO of ~30 14-seat minibuses serving one urban corridor, constructed against the FROZEN v0.1.0 schema as an empirical stress test for the MSD coverage/gap matrix (Track E). Operational parameters (fleet size, fares, hours, fill-and-go departure, cash payment, SACCO governance, safety profile) are realistic-but-illustrative, generalised from the informal/paratransit literature — ITF Roundtable Report 199 'Informal Public Transport in the Developing World', the GIZ Sustainable Urban Transport guidance on minibus/paratransit reform, and reform-pattern studies of cities such as Bogotá (D. Oviedo et al.). No live data was fetched and no external GTFS feed was used as a value source. Place names and coordinates are approximate and illustrative only. See docs/coverage-gap-matrix.md for the feature → field → expressibility analysis and docs/v0.2.0-candidates.md for the recorded gaps.",
+
+  "_schema_notes": {
+    "identified_gaps": [
+      "FILL_AND_GO SERVICE TYPE: A matatu departs its stage when full and picks up/sets down on hail along the corridor (hail-and-ride). MSD v0.1.0 service_type registry offers only 'on_demand'; there is no value for a fill-and-go / shared fixed-corridor service, and booking_rules assume advance booking. service_type is set to 'on_demand' as a forced structural placeholder; the true model is carried in service.operational_model (pass-through) and logged as needs-extension.",
+      "ORGANISATION_TYPE: The operator is a SACCO (Savings and Credit Cooperative Organisation) — an owner-operator cooperative/route association, not a single corporate operator. MSD v0.1.0 provider/legal_entity has no organisation_type field. Carried in provider.organisation_type (pass-through); logged as needs-extension.",
+      "DYNAMIC PRICING: Cash fares vary by time of day (peak/off-peak), weather (rain surcharge), demand, and on-the-spot negotiation with the conductor. MSD v0.1.0 fare_rule.price is a single fixed number. A representative off-peak fare is carried as price; the variability is carried in fare_structure.dynamic_pricing (pass-through) and logged as needs-extension.",
+      "SAFETY: Informal-transport safety attributes (seatbelt availability, overloading practice, driver vetting, incident reporting) are operationally salient (ITF-199, GIZ) but absent from §3. Carried in service.safety (pass-through, same shape as the mybuxi example); already recorded as v0.2.0 candidate A.5.",
+      "PROPULSION VALUE: The fleet is diesel. The propulsion registry contains only 'electric'; the optional propulsion field is therefore omitted (a no-new-code-list-value, minor gap).",
+      "ROUTE / CORRIDOR STRUCTURE: The service is a linear corridor with ordered stages (termini + intermediate stages) plus continuous hail-and-ride between them. service_area.type='stops' captures the named stages but not the ordered route geometry nor the 'board anywhere along the line' behaviour. Partially expressible."
+    ]
+  },
+
+  "provider": {
+    "provider_id": "ug:sacco:hypothetical:0001",
+    "name": "Hypothetical Kampala Corridor Minibus-Taxi SACCO",
+    "description": "Illustrative owner-operator cooperative (SACCO) of independent minibus-taxi (matatu) owners and drivers operating one urban corridor in Kampala. Hypothetical — not a real, named entity.",
+    "country": "UG",
+    "_contact_note": "url and contact_email are omitted: provider.url / provider.contact_email are typed as non-nullable strings in v0.1.0 (the C1 'null = unknown' convention applies to optional scalars elsewhere, not here), so an unknown value is represented by omission rather than null.",
+    "languages": ["en", "lg", "sw"],
+    "legal_entity": {
+      "name": "Hypothetical Corridor Transport SACCO Ltd.",
+      "registration_id": null,
+      "vat_id": null,
+      "_comment": "Illustrative. Minibus-taxi operators in Uganda commonly organise as SACCOs / route associations registered under the cooperative-societies regime; the individual vehicles are owned by members, not by the SACCO."
+    },
+    "organisation_type": {
+      "category": "cooperative",
+      "model": "owner_operator_sacco",
+      "_comment": "PASS-THROUGH EXTENSION (not in §3). SACCO = Savings and Credit Cooperative Organisation: a route association of independent owner-operators. Drivers typically remit a daily target/fee; the SACCO controls route access and stage order. MSD v0.1.0 cannot express organisation_type. See docs/coverage-gap-matrix.md and docs/v0.2.0-candidates.md."
+    }
+  },
+
+  "services": [
+    {
+      "service_id": "corridor-fill-and-go",
+      "service_type": "on_demand",
+      "name": "Kampala Corridor Minibus-Taxi (matatu) Service",
+      "mode": "bus",
+      "_mode_note": "A 14-seat minibus (matatu/Toyota-Hiace-class) is modelled as 'bus' (the only mode registry value applicable). The minibus-taxi distinction is not separately expressible.",
+      "operational_model": {
+        "type": "fill_and_go",
+        "boarding": "hail_and_ride",
+        "_comment": "PASS-THROUGH EXTENSION (not in §3). The vehicle departs its stage when full and boards/alights on hail anywhere along the corridor. service_type is set to 'on_demand' only because that is the sole registry value; it does NOT mean the service is booked on demand. There is no advance booking. Logged as the fill_and_go gap (needs-extension)."
+      },
+      "operating_hours": {
+        "default": [
+          { "days": ["mo", "tu", "we", "th", "fr"], "start": "05:00", "end": "22:00" },
+          { "days": ["sa"], "start": "05:30", "end": "22:00" },
+          { "days": ["su"], "start": "06:30", "end": "21:00" }
+        ],
+        "_comment": "Illustrative service window. Frequency is demand-driven (depart-when-full), not timetabled, so headways are not represented; vehicles are most frequent during the morning and evening peaks."
+      },
+      "service_area": {
+        "type": "stops",
+        "_area_note": "The service is a single linear corridor. Stages below are illustrative and approximate (coordinates rounded). Real matatu service also boards/alights on hail between stages — continuous hail-and-ride is not expressible in the stops model.",
+        "stops": [
+          {
+            "stop_id": "stage:terminus-central",
+            "name": "Central Taxi Stage (corridor terminus)",
+            "stage_role": "terminus",
+            "coordinates": { "lat": 0.3136, "lon": 32.5739 }
+          },
+          {
+            "stop_id": "stage:midcorridor-1",
+            "name": "Mid-corridor Stage 1",
+            "stage_role": "intermediate",
+            "coordinates": { "lat": 0.3340, "lon": 32.5710 }
+          },
+          {
+            "stop_id": "stage:midcorridor-2",
+            "name": "Mid-corridor Stage 2",
+            "stage_role": "intermediate",
+            "coordinates": { "lat": 0.3430, "lon": 32.5870 }
+          },
+          {
+            "stop_id": "stage:terminus-suburb",
+            "name": "Suburban Stage (corridor terminus)",
+            "stage_role": "terminus",
+            "coordinates": { "lat": 0.3560, "lon": 32.6160 }
+          }
+        ]
+      },
+      "vehicles": [
+        {
+          "vehicle_type_id": "minibus-14-seat",
+          "name": "14-seat minibus (matatu)",
+          "capacity": {
+            "seats": 14,
+            "wheelchair": 0,
+            "_comment": "Standard Toyota-Hiace-class minibus. Practical loads can exceed nominal seating (overloading is common in informal operation); only the nominal seat count is represented."
+          },
+          "count": 30,
+          "_propulsion_note": "Fleet is diesel. The propulsion registry contains only 'electric', so the optional propulsion field is omitted rather than asserting an inapplicable value (no new code-list value is introduced)."
+        }
+      ],
+      "safety": {
+        "driver_identification": false,
+        "vehicle_tracking_available": false,
+        "trip_sharing_available": false,
+        "emergency_button": false,
+        "cctv_onboard": false,
+        "seatbelts_available": false,
+        "driver_vetting": "informal",
+        "reporting_mechanism": {
+          "available": false,
+          "channels": [],
+          "anonymous_reporting": false
+        },
+        "_comment": "PASS-THROUGH EXTENSION (not in §3; same shape as the mybuxi example, candidate A.5). Illustrative profile generalised from ITF-199 / GIZ findings on informal transport: limited formal driver vetting, no in-vehicle tracking or panic button, seatbelts often absent, overloading common. Safety is precisely the dimension reform programmes target, which is why its absence from §3 is salient for the gap matrix."
+      },
+      "accessibility": {
+        "wheelchair_accessible_vehicles": false,
+        "audio_announcements": false,
+        "booking_assistance_available": false,
+        "_comment": "Standard minibuses with steps; no documented accessibility features."
+      }
+    }
+  ],
+
+  "fare_structures": [
+    {
+      "fare_id": "cash-stage-fare",
+      "name": "Cash stage fare (per boarding)",
+      "description": "Flat cash fare paid to the conductor on board, banded loosely by distance (short hop vs. full corridor). Representative OFF-PEAK values; actual fares fluctuate — see dynamic_pricing.",
+      "service_ids": ["corridor-fill-and-go"],
+      "currency": "UGX",
+      "rules": [
+        {
+          "description": "Short hop (a few stages) — representative off-peak fare",
+          "conditions": { "band": "short_hop", "time_of_day": "off_peak" },
+          "price": 1500
+        },
+        {
+          "description": "Full corridor (terminus to terminus) — representative off-peak fare",
+          "conditions": { "band": "full_corridor", "time_of_day": "off_peak" },
+          "price": 2000
+        }
+      ],
+      "payment_methods": ["cash_in_vehicle"],
+      "dynamic_pricing": {
+        "varies_by": ["time_of_day", "weather", "demand", "negotiation"],
+        "examples": [
+          { "factor": "peak", "effect": "fare rises during morning/evening peaks", "illustrative_full_corridor": 3000 },
+          { "factor": "rain", "effect": "rain surcharge", "illustrative_full_corridor": 3500 },
+          { "factor": "negotiation", "effect": "conductor may bargain the fare up or down per passenger" }
+        ],
+        "_comment": "PASS-THROUGH EXTENSION (not in §3). MSD v0.1.0 fare_rule.price is a single fixed number; it cannot express demand/time/weather-varying or negotiated cash fares. The rules[] above carry representative off-peak values so the file is well-formed; the real variability lives here. Logged as the dynamic_pricing gap (needs-extension).",
+        "_schema_gap": "Dynamic / negotiated fares not modelled in MSD v0.1.0."
+      },
+      "vat_included": true,
+      "_vat_comment": "Informal cash fares are not itemised for VAT; vat_rate is left unspecified."
+    }
+  ],
+
+  "booking_rules": {
+    "advance_booking": {
+      "minimum_minutes": null,
+      "maximum_days": null,
+      "_comment": "No advance booking. Passengers board at a stage or hail along the corridor (walk-up). The booking_channels registry (app/phone/web/email) has no value for walk-up / hail-and-ride, so booking_channels is omitted rather than asserting an inapplicable channel. This reflects the fill_and_go gap."
+    },
+    "passenger_identification": "none_required"
+  },
+
+  "settlement": {
+    "supported_settlement_protocols": ["cash"],
+    "_comment": "Passengers pay cash to the conductor. Separately, drivers typically remit a daily target/fee to the vehicle owner and SACCO dues to the association — a revenue model the §3.7 settlement object (oriented to MaaS/platform settlement) does not represent. settlement.model is omitted (no fitting registry value for an informal cash model)."
+  },
+
+  "routing_hints": {
+    "travel_time_factor": 1.6,
+    "travel_time_source": "provider_estimate",
+    "_comment": "Illustrative. Travel time is dominated by congestion plus depart-when-full waiting at the terminus; the factor is an estimate, not a measured value."
+  },
+
+  "references": {
+    "gtfs_feed_url": null,
+    "gbfs_feed_url": null,
+    "tomp_api_url": null,
+    "real_time_endpoint": null,
+    "info_url": null,
+    "terms_url": null
+  },
+
+  "_schema_gap_summary": {
+    "needs_extension": [
+      "fill_and_go service type + hail-and-ride boarding + no-booking departure model (service_type registry has only 'on_demand'; booking_rules assume advance booking)",
+      "organisation_type — SACCO / owner-operator cooperative governance (no field in provider/legal_entity)",
+      "dynamic_pricing — time/weather/demand-varying and negotiated cash fares (fare_rule.price is a single fixed number)",
+      "safety — informal-transport safety profile (not in §3; carried as pass-through, candidate A.5)"
+    ],
+    "partially_expressible": [
+      "Corridor route with ordered stages + continuous hail-and-ride — stops capture named stages but not route order or board-anywhere behaviour",
+      "Per-stage / distance-banded fare — carried via fare_rule.conditions (freeform) but without a formal stage/band model"
+    ],
+    "minor": [
+      "Diesel propulsion — propulsion registry contains only 'electric'; optional field omitted (no new code-list value)",
+      "Minibus-taxi (matatu) vehicle class — modelled as mode 'bus'; the minibus-taxi distinction is not separately expressible"
+    ]
+  }
+}
