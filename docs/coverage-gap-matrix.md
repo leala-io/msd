@@ -5,8 +5,9 @@
 `schema/v0.1.0/msd.schema.json` with the registry resolved (AJV `Ajv2020` + `ajv-formats`).
 
 This matrix takes the operational features documented for informal / paratransit minibus services and maps each to the
-MSD v0.1.0 field that carries it, then classifies the fit as **expressible**, **partially expressible**, or
-**needs-extension**. The example is hypothetical: a generic ~30-vehicle, single-corridor minibus-taxi SACCO, not a real
+MSD v0.1.0 field that carries it, then classifies the fit as **expressible**, **partially expressible**,
+**needs-extension**, or **registry growth (C2)** (a value the versioned registry can add without a schema change).
+The example is hypothetical: a generic ~30-vehicle, single-corridor minibus-taxi SACCO, not a real
 named operator. No live data was fetched and no external GTFS feed was used as a value source. Where a feature is
 **needs-extension**, the limitation is the finding — the schema is not patched. Gaps are recorded in
 [`v0.2.0-candidates.md`](v0.2.0-candidates.md).
@@ -35,7 +36,7 @@ Values in the example are realistic-but-illustrative, not measured.
 | 5 | SACCO / owner-operator cooperative governance (ITF-199, GIZ) | `provider` / `provider.legal_entity` | **needs-extension** | No `organisation_type`; carried in `provider.organisation_type` (pass-through). |
 | 6 | 14-seat minibus fleet, fleet size | `service.vehicles[]` (`vehicle_type_id`, `capacity.seats`, `count`) | **expressible** | Nominal seating and count carry; practical overloading is not represented (only nominal seats). |
 | 7 | Minibus-taxi (matatu) vehicle class | `service.mode` (registry: `bus` only) | **partially expressible** | Modelled as `bus`; the minibus-taxi distinction is not separately expressible (minor). |
-| 8 | Diesel propulsion | `vehicle.propulsion` (registry: `electric` only) | **needs-extension (minor)** | Optional field **omitted** rather than asserting an inapplicable value; no new code-list value introduced. |
+| 8 | Diesel propulsion | `vehicle.propulsion` (registry: `electric` only) | **registry growth (C2)** | Adding a `diesel` value to the `propulsion` registry is routine non-breaking registry growth (Convention C2), not a structural schema extension. The optional field is omitted in the example; no value is invented. |
 | 9 | Daily operating window | `service.operating_hours.default[]` | **expressible** | Day/start/end carry. Demand-driven headways are not timetabled, hence not represented. |
 | 10 | Flat cash fare, distance-banded (short hop / full corridor) (ITF-199) | `fare_structure.rules[].price` + `conditions` | **partially expressible** | Representative fares carry as fixed `price`; banding via freeform `conditions`, without a formal stage/band model. |
 | 11 | Dynamic / negotiated fares (peak, weather, demand, bargaining) (ITF-199, Oviedo) | `fare_rule.price` (single fixed number) | **needs-extension** | Variability carried in `fare_structure.dynamic_pricing` (pass-through); `price` cannot vary by time/weather/demand or be negotiated. |
@@ -50,8 +51,9 @@ Values in the example are realistic-but-illustrative, not measured.
 - **Partially expressible:** corridor/stage structure (no route order), vehicle class (bus only), distance-banded fares
   (no formal band model).
 - **Needs-extension (the finding):** **fill-and-go / hail-and-ride / no-booking** departure model, **organisation_type**
-  (SACCO governance), **dynamic / negotiated pricing**, **safety profile**, informal **settlement** model, and the minor
-  **diesel propulsion** code-list gap.
+  (SACCO governance), **dynamic / negotiated pricing**, **safety profile**, and informal **settlement** model.
+- **Registry growth (C2, non-breaking):** **diesel propulsion** — adding a value to the `propulsion` registry is routine
+  additive registry growth, not a structural schema extension.
 
 These needs-extension items are recorded in [`v0.2.0-candidates.md`](v0.2.0-candidates.md) §D. They are **candidates for a
 future Concept Paper revision and v0.2.0 schema**, not defects to patch in v0.1.0.
