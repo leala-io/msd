@@ -1,0 +1,46 @@
+name: engine
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gtfs-flex:
+    name: MSD → GTFS-Flex gate (gtfs-validator)
+    runs-on: ubuntu-latest
+    env:
+      # gtfs-validator v7+ required (full Flex validation, no structural fallback).
+      # Pinned for reproducibility; bump after checking the Releases page.
+      GTFS_VALIDATOR_VERSION: "8.0.1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install validator dependencies (for the input-validation path)
+        working-directory: validator
+        run: npm ci
+
+      - name: Fetch gtfs-validator CLI
+        run: |
+          mkdir -p engine/.tools
+          curl -sSL -o engine/.tools/gtfs-validator-cli.jar \
+            "https://github.com/MobilityData/gtfs-validator/releases/download/v${GTFS_VALIDATOR_VERSION}/gtfs-validator-${GTFS_VALIDATOR_VERSION}-cli.jar"
+
+      - name: Generate GTFS-Flex feed from mybuxi
+        run: node engine/cli.js examples/ch/mybuxi-emmental.msd.json engine/out/mybuxi-gtfs-flex --target gtfs-flex
+
+      - name: Validate generated feed
+        run: |
+          java -jar engine/.tools/gtfs-validator-cli.jar \
+            -i engine/out/mybuxi-gtfs-flex -o engine/out/validation-mybuxi --country_code ch -svu
+
+      - name: Gate — fail on any ERROR notice
+        run: node engine/scripts/check-gtfs-report.js engine/out/validation-mybuxi/report.json

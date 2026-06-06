@@ -1,0 +1,3 @@
+# Engine local tooling — not committed (downloaded at build/CI time)
+.tools/
+out/
