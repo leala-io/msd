@@ -2,9 +2,11 @@
 
 **A declarative open standard for describing mobility services**
 
+[![Try it: hosted validator](https://img.shields.io/badge/Try%20it-hosted%20validator-brightgreen.svg)](https://leala-io.github.io/msd/)
+[![CI](https://github.com/leala-io/msd/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/leala-io/msd/actions/workflows/validate.yml)
 [![Spec License: CC BY-SA 4.0](https://img.shields.io/badge/Spec-CC%20BY--SA%204.0-blue.svg)](LICENSE-SPEC)
 [![Code License: AGPL-3.0](https://img.shields.io/badge/Code-AGPL--3.0-blue.svg)](LICENSE-CODE)
-[![Status: Draft](https://img.shields.io/badge/Status-v0.1.0--draft-orange.svg)]()
+[![Status: v0.1.1-draft](https://img.shields.io/badge/Status-v0.1.1--draft-orange.svg)](CHANGELOG.md)
 
 ---
 
