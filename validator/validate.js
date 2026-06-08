@@ -2,11 +2,11 @@
 'use strict';
 
 /**
- * MSD reference validator (v0.1.0).
+ * MSD reference validator (v0.1.0) — thin CLI wrapper.
  *
- * Loads the root structural schema and all external code-list registry schemas
- * (Convention C2), compiles with AJV Draft 2020-12, and validates a target MSD
- * file passed as a CLI argument.
+ * Reads the root structural schema and all external code-list registry schemas
+ * (Convention C2) from disk, then delegates to the pure validation core
+ * (validator/core.js) shared with the Track C web validator.
  *
  * Usage:
  *   node validator/validate.js examples/ch/mybuxi-emmental.msd.json
@@ -17,8 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const Ajv2020 = require('ajv/dist/2020');
-const addFormats = require('ajv-formats');
+const { validateMsd, formatErrors } = require('./core');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const SCHEMA_PATH = path.join(REPO_ROOT, 'schema', 'v0.1.0', 'msd.schema.json');
@@ -28,19 +27,16 @@ function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
-function buildValidator() {
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
-  addFormats(ajv);
-
-  // Register every registry code-list schema by its $id so the root schema's
-  // $refs resolve at validation time (Convention C2).
+function loadSchemaAndRegistry() {
+  // Load every registry code-list schema so the root schema's $refs resolve
+  // by $id at validation time (Convention C2).
+  const registry = [];
   for (const entry of fs.readdirSync(REGISTRY_DIR)) {
     if (!entry.endsWith('.json')) continue;
-    ajv.addSchema(readJson(path.join(REGISTRY_DIR, entry)));
+    registry.push(readJson(path.join(REGISTRY_DIR, entry)));
   }
-
-  const rootSchema = readJson(SCHEMA_PATH);
-  return ajv.compile(rootSchema);
+  const schema = readJson(SCHEMA_PATH);
+  return { schema, registry };
 }
 
 function main() {
@@ -50,9 +46,10 @@ function main() {
     process.exit(1);
   }
 
-  let validate;
+  let schema;
+  let registry;
   try {
-    validate = buildValidator();
+    ({ schema, registry } = loadSchemaAndRegistry());
   } catch (err) {
     console.error(`Failed to load/compile schema: ${err.message}`);
     process.exit(1);
@@ -66,16 +63,22 @@ function main() {
     process.exit(1);
   }
 
-  const ok = validate(data);
-  if (ok) {
+  let result;
+  try {
+    result = validateMsd(data, { schema, registry });
+  } catch (err) {
+    console.error(`Failed to load/compile schema: ${err.message}`);
+    process.exit(1);
+  }
+
+  if (result.valid) {
     console.log(`PASS  ${target}`);
     process.exit(0);
   }
 
   console.log(`FAIL  ${target}`);
-  for (const e of validate.errors) {
-    const where = e.instancePath || '(root)';
-    console.log(`  ${where}: ${e.message}`);
+  for (const line of formatErrors(result.errors)) {
+    console.log(`  ${line}`);
   }
   process.exit(1);
 }
