@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "MSD: Mobility Service Description"
+message: "If you use MSD, please cite it using the metadata in this file."
+type: software
+authors:
+  - family-names: "Teichmüller"
+    given-names: "Thomas"
+    email: "thomas@leala.io"
+repository-code: "https://github.com/leala-io/msd"
+url: "https://leala-io.github.io/msd/"
+abstract: "MSD is a declarative open standard (JSON) for describing on-demand, demand-responsive, and informal mobility services — service areas, vehicles, tariffs, booking rules, and settlement parameters — in a single machine-readable file, complementary to GTFS, GBFS, GOFS, and NeTEx."
+keywords:
+  - "mobility data"
+  - "open standard"
+  - "demand-responsive transport"
+  - "GTFS-Flex"
+  - "JSON Schema"
+  - "informal transport"
+license:
+  - AGPL-3.0-or-later
+  - CC-BY-SA-4.0
+version: "0.1.1"
+date-released: "2026-06-08"
