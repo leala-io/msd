@@ -1,0 +1,5 @@
+# Build output — never committed (assembled at build/deploy time).
+dist/
+
+# Local dependencies.
+node_modules/

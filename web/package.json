@@ -1,0 +1,15 @@
+{
+  "name": "msd-web-validator",
+  "version": "0.1.0",
+  "description": "Client-only paste-&-check web validator for MSD v0.1.x (Track C)",
+  "license": "AGPL-3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test:identity": "node test/identity.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

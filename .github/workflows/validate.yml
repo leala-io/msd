@@ -58,3 +58,32 @@ jobs:
             fi
           done
           exit $fail
+
+  web-identity:
+    name: Web validator identity gate (web core ≡ CLI core)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      # ajv + ajv-formats for the bundle resolve from validator/node_modules
+      # (the bare require lives in validator/core.js).
+      - name: Install validator dependencies
+        working-directory: validator
+        run: npm ci
+
+      # esbuild for the web bundle/identity test.
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Build web bundle
+        working-directory: web
+        run: npm run build
+
+      - name: Identity gate — all fixtures, web core == CLI core
+        working-directory: web
+        run: node test/identity.mjs
