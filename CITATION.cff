@@ -16,8 +16,6 @@ keywords:
   - "GTFS-Flex"
   - "JSON Schema"
   - "informal transport"
-license:
-  - AGPL-3.0-or-later
-  - CC-BY-SA-4.0
+license: AGPL-3.0-or-later
 version: "0.1.1"
 date-released: "2026-06-08"
