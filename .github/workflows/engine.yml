@@ -31,8 +31,17 @@ jobs:
       - name: Fetch gtfs-validator CLI
         run: |
           mkdir -p engine/.tools
-          curl -sSL -o engine/.tools/gtfs-validator-cli.jar \
+          curl -fL --retry 2 --retry-delay 3 -o engine/.tools/gtfs-validator-cli.jar \
             "https://github.com/MobilityData/gtfs-validator/releases/download/v${GTFS_VALIDATOR_VERSION}/gtfs-validator-${GTFS_VALIDATOR_VERSION}-cli.jar"
+          size=$(wc -c < engine/.tools/gtfs-validator-cli.jar)
+          if [ "$size" -lt 1048576 ]; then
+            echo "::error::Downloaded gtfs-validator JAR is too small (${size} bytes < 1 MB) — download likely failed."
+            exit 1
+          fi
+          if ! unzip -tq engine/.tools/gtfs-validator-cli.jar > /dev/null; then
+            echo "::error::Downloaded gtfs-validator JAR is not a valid zip/JAR archive."
+            exit 1
+          fi
 
       - name: Generate GTFS-Flex feed from mybuxi
         run: node engine/cli.js examples/ch/mybuxi-emmental.msd.json engine/out/mybuxi-gtfs-flex --target gtfs-flex

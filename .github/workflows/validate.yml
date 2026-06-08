@@ -26,15 +26,26 @@ jobs:
             const addFormats = require("./validator/node_modules/ajv-formats");
             const ajv = new Ajv({ allErrors: true, strict: false });
             addFormats(ajv);
+            let ok = true;
+            const check = (label, schema) => {
+              if (!ajv.validateSchema(schema)) {
+                ok = false;
+                console.error("FAIL " + label);
+                console.error(JSON.stringify(ajv.errors, null, 2));
+              } else {
+                console.log("ok   " + label);
+              }
+            };
             for (const f of fs.readdirSync("registry/v0.1.0")) {
-              if (f.endsWith(".json")) ajv.addSchema(JSON.parse(fs.readFileSync("registry/v0.1.0/" + f, "utf8")));
+              if (!f.endsWith(".json")) continue;
+              const reg = JSON.parse(fs.readFileSync("registry/v0.1.0/" + f, "utf8"));
+              check("registry/v0.1.0/" + f, reg);
+              ajv.addSchema(reg);
             }
             const root = JSON.parse(fs.readFileSync("schema/v0.1.0/msd.schema.json", "utf8"));
-            if (!ajv.validateSchema(root)) {
-              console.error(JSON.stringify(ajv.errors, null, 2));
-              process.exit(1);
-            }
-            console.log("schema is meta-valid (Draft 2020-12)");
+            check("schema/v0.1.0/msd.schema.json", root);
+            if (!ok) process.exit(1);
+            console.log("all schema + registry files are meta-valid (Draft 2020-12)");
           '
 
       - name: Examples and valid fixtures must PASS
