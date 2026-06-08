@@ -1,0 +1,68 @@
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least-privilege tokens required by the Pages deploy.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One Pages deployment at a time; let an in-progress deploy finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      # ajv + ajv-formats for the bundle resolve from validator/node_modules
+      # (the bare require lives in validator/core.js).
+      - name: Install validator dependencies
+        working-directory: validator
+        run: npm ci
+
+      # esbuild for the web bundle.
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Build web bundle
+        working-directory: web
+        run: npm run build
+
+      # Assemble the artifact: validator at root + canonical schema/registry as subdirs
+      # so the $id URLs keep resolving from the same Pages origin.
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p _site
+          cp web/index.html _site/index.html
+          cp -R web/dist _site/dist
+          cp -R schema _site/schema
+          cp -R registry _site/registry
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MSD Validator — paste &amp; check</title>
+    <style>
+      :root {
+        --fg: #1a1a1a;
+        --muted: #5a5a5a;
+        --border: #c9c9c9;
+        --pass-bg: #e7f6ec;
+        --pass-fg: #1b6e3c;
+        --fail-bg: #fdecec;
+        --fail-fg: #a3242a;
+        --accent: #1f4fd8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        color: var(--fg);
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 4rem;
+        line-height: 1.5;
+      }
+      h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+      .scope {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 0;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        margin: 1rem 0 0.5rem;
+      }
+      label { font-size: 0.9rem; }
+      textarea {
+        width: 100%;
+        min-height: 320px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.9rem;
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        resize: vertical;
+      }
+      textarea.dragover { border-color: var(--accent); border-style: dashed; }
+      .assurance {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin: 0.5rem 0 1rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 0.55rem 1.4rem;
+        border: none;
+        border-radius: 6px;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+      }
+      button:hover { filter: brightness(0.95); }
+      #result { margin-top: 1.5rem; }
+      #result .banner { font-weight: 600; padding: 0.6rem 0.9rem; border-radius: 6px; margin: 0 0 0.5rem; }
+      #result.pass .banner { background: var(--pass-bg); color: var(--pass-fg); }
+      #result.fail .banner { background: var(--fail-bg); color: var(--fail-fg); }
+      #result ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.88rem;
+      }
+      #result li {
+        padding: 0.3rem 0.6rem;
+        border-bottom: 1px solid #eee;
+      }
+      footer {
+        margin-top: 3rem;
+        font-size: 0.82rem;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+        padding-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MSD Validator</h1>
+    <p class="scope">
+      Validates schema conformance against the MSD JSON Schema — not business/semantic
+      validity. (No Güteklassen or assessment logic.)
+    </p>
+
+    <div class="controls">
+      <label for="version">Schema version:</label>
+      <select id="version"></select>
+
+      <label for="file-input">Load file…</label>
+      <input id="file-input" type="file" accept=".json,application/json" />
+    </div>
+
+    <textarea
+      id="msd-input"
+      placeholder="Paste your MSD JSON here, or drag a file onto this box…"
+      spellcheck="false"
+    ></textarea>
+
+    <p class="assurance">
+      Runs entirely in your browser; your file is never uploaded, sent, or stored.
+    </p>
+
+    <button id="validate-btn" type="button">Validate</button>
+
+    <div id="result" aria-live="polite"></div>
+
+    <footer>
+      A client-side schema-conformance check, in the spirit of the openly hosted
+      validators common across the mobility-data standards landscape (e.g. GBFS).
+      Built on the same JSON Schema (Draft 2020-12) validation core as the reference CLI.
+    </footer>
+
+    <script type="module" src="./dist/app.js"></script>
+  </body>
+</html>
