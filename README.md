@@ -7,6 +7,7 @@
 [![Spec License: CC BY-SA 4.0](https://img.shields.io/badge/Spec-CC%20BY--SA%204.0-blue.svg)](LICENSE-SPEC)
 [![Code License: AGPL-3.0](https://img.shields.io/badge/Code-AGPL--3.0-blue.svg)](LICENSE-CODE)
 [![Status: v0.1.1-draft](https://img.shields.io/badge/Status-v0.1.1--draft-orange.svg)](CHANGELOG.md)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20598626.svg)](https://doi.org/10.5281/zenodo.20598626)
 
 ---
 
