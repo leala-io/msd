@@ -35,6 +35,18 @@ MSD is a static JSON file that contains everything needed to discover, understan
 }
 ```
 
+## Validate
+
+Try it in your browser — paste an MSD file into the **[hosted validator](https://leala-io.github.io/msd/)**. It runs entirely client-side; your file is never uploaded.
+
+Prefer the command line? Validate locally against the reference implementation:
+
+```bash
+node validator/validate.js examples/ch/mybuxi-emmental.msd.json
+```
+
+The hosted and CLI validators share one validation core, so they always agree. Both check **schema conformance** for the selected MSD version — not business or semantic validity.
+
 ## Documentation
 
 | Document | Description |
@@ -42,10 +54,18 @@ MSD is a static JSON file that contains everything needed to discover, understan
 | [Concept Paper](spec/MSD-concept-paper.md) | Full technical vision, data model, and use cases |
 | [Governance Framework](spec/MSD-governance.md) | How MSD is governed: commitments, process, licensing |
 | [Conventions](CONVENTIONS.md) | C1 (null vs zero) and C2 (external code-list registry) |
+| [JSON Schema](schema/v0.1.0/msd.schema.json) | The v0.1.0 schema (JSON Schema Draft 2020-12) that files are validated against |
+| [Reference validator](validator/) | AJV-based CLI; the same validation core as the hosted validator |
+| [Examples](examples/) | Validated MSD files (e.g. `examples/ch/mybuxi-emmental.msd.json`) |
+| [MSD ↔ NeTEx comparison](docs/comparison-netex.md) | How MSD's provider layer relates to the NeTEx system layer |
+| [Coverage & gap matrix](docs/coverage-gap-matrix.md) | What v0.1.0 expresses vs. recorded v0.2.0 candidates |
+| [MSD → GTFS-Flex engine](engine/adapters/gtfs-flex/) | Generates a GTFS-Flex discovery feed from an MSD file |
 
 ## Status
 
-MSD is in its **founding phase** (v0.1.0-draft). The concept paper is a Request for Comments. We are actively seeking:
+MSD is in its **founding phase** (v0.1.0-draft) — the specification is published as a Request for Comments. The foundation is in place and working: the v0.1.0 JSON Schema, a reference validator (CLI + [hosted](https://leala-io.github.io/msd/)), and validated examples. The producer-to-consumer path is exercised end-to-end — a validated [mybuxi example](examples/ch/mybuxi-emmental.msd.json) is read by an [MSD → GTFS-Flex engine](engine/adapters/gtfs-flex/) that emits a standard discovery feed.
+
+We are actively seeking:
 
 - **Technical reviewers** — Does the data model cover your use case?
 - **Pilot providers** — Describe your service as an MSD file
@@ -69,4 +89,4 @@ All contributions require a [Developer Certificate of Origin](DCO) sign-off.
 
 MSD is initiated by [Leap and Land](https://leapandland.ch) and governed as an open community project under [LeaLa](https://leala.io).
 
-Maintainer: Thomas Teichmüller — thomas@leapandland.ch
+Maintainer: Thomas Teichmüller — thomas@leala.io
