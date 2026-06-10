@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+- Web validator output preview (L2): after a PASS, a collapsed panel offers a client-side service-area map (Leaflet, no basemap by default, opt-in tiles; constraints not drawn — declared area, not net coverage) and an in-browser GTFS-Flex feed download (same pure engine core as the CLI, JSZip-bundled; valid-but-unconvertible files get a friendly message). Engine core split into a pure conversion module (engine/core/convert.js); new web-engine-identity CI gate proves the bundled engine byte-equal to the CLI engine.
+
 ### Fixed
 - examples/ch/mybuxi-emmental: source-verified corrections — operator legal entity is Verein mybuxi Emmental (platform provider documented in comments); booking channels corrected to app + email; mybuxi-Card added as discount-card product with matching eligibility credential; provider identifier corrected to a provider-scoped id (no SBOID/GO number — service is non-concessioned, per Appendix D.1 fallback guidance); stop-list source precision (335 stops, 2026-02-01 list); schema notes updated to current extensions/out-of-scope documentation.
 
