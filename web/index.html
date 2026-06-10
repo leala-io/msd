@@ -87,6 +87,9 @@
         border-bottom: 1px solid #eee;
       }
       #area-panel { margin-top: 1.5rem; }
+      .panel-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+      #feed-msg { margin: 0.6rem 0 0; }
+      #feed-msg.error { color: var(--fail-fg); }
       #area-body { margin-top: 0.75rem; }
       .map-controls { margin-bottom: 0.6rem; font-size: 0.9rem; }
       .map-controls label { display: inline-flex; align-items: center; gap: 0.4rem; }
@@ -136,9 +139,19 @@
     <div id="result" aria-live="polite"></div>
 
     <section id="area-panel" hidden>
-      <button id="area-toggle" type="button" class="secondary" aria-expanded="false">
-        Show service area
-      </button>
+      <div class="panel-actions">
+        <button id="area-toggle" type="button" class="secondary" aria-expanded="false">
+          Show service area
+        </button>
+        <button id="download-btn" type="button" class="secondary">
+          Download GTFS-Flex feed
+        </button>
+      </div>
+      <p id="feed-msg" class="assurance" hidden></p>
+      <p class="assurance">
+        The feed is generated in your browser from the validated file; GTFS-Flex
+        conformance (0 notices) is verified in CI, not in the browser.
+      </p>
       <div id="area-body" hidden>
         <div class="map-controls">
           <label>
