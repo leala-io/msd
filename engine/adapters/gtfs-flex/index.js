@@ -11,7 +11,9 @@
  * Mapping table and documented lossy mappings: ./README.md.
  */
 
-const core = require('../../core/msd');
+// Pure conversion helpers only (no fs/path/child_process), so this adapter is
+// browser-portable. loadAndValidate lives in core/msd and is used by the CLI.
+const core = require('../../core/convert');
 
 function buildFlexFeed(msd) {
   const provider = msd.provider;

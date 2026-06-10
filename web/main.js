@@ -5,6 +5,7 @@
 
 import { validateFor, formatErrors, VERSION_IDS } from './bundle.js';
 import { createServiceAreaMap } from './map.js';
+import { downloadGtfsFlexFeed } from './feed.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -23,8 +24,16 @@ const areaBody = $('area-body');
 const areaMapEl = $('area-map');
 const areaEmpty = $('area-empty');
 const basemapToggle = $('basemap-toggle');
+const downloadBtn = $('download-btn');
+const feedMsg = $('feed-msg');
 let areaMap = null;
 let lastValidDoc = null;
+
+function clearFeedMsg() {
+  feedMsg.hidden = true;
+  feedMsg.textContent = '';
+  feedMsg.classList.remove('error');
+}
 
 function hideAreaPanel() {
   areaPanel.hidden = true;
@@ -33,6 +42,7 @@ function hideAreaPanel() {
   areaToggle.textContent = 'Show service area';
   basemapToggle.checked = false;
   if (areaMap) areaMap.setBackground(false);
+  clearFeedMsg();
   lastValidDoc = null;
 }
 
@@ -58,6 +68,21 @@ areaToggle.addEventListener('click', () => {
 
 basemapToggle.addEventListener('change', () => {
   if (areaMap) areaMap.setBackground(basemapToggle.checked);
+});
+
+// Download the GTFS-Flex feed, generated in-memory from the validated doc. A
+// schema-valid file can still fail conversion (e.g. no provider.country → no
+// agency_timezone) — catch it and show a friendly message, with no download.
+downloadBtn.addEventListener('click', async () => {
+  clearFeedMsg();
+  try {
+    await downloadGtfsFlexFeed(lastValidDoc);
+  } catch (err) {
+    feedMsg.textContent =
+      `This file is valid, but can't be converted to a GTFS-Flex feed: ${err.message}`;
+    feedMsg.classList.add('error');
+    feedMsg.hidden = false;
+  }
 });
 
 // Populate the version dropdown (keyed by schema version; v0.1.0 today).
