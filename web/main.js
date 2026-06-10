@@ -4,6 +4,7 @@
 // the shared validation core entirely in the browser on the inlined canonical schema.
 
 import { validateFor, formatErrors, VERSION_IDS } from './bundle.js';
+import { createServiceAreaMap } from './map.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -12,6 +13,52 @@ const versionSelect = $('version');
 const fileInput = $('file-input');
 const validateBtn = $('validate-btn');
 const result = $('result');
+
+// Service-area preview (progressive disclosure: appears only after a PASS,
+// collapsed; "Validate" stays the primary action). The map is created lazily on
+// first reveal so the Leaflet container sizes against a visible element.
+const areaPanel = $('area-panel');
+const areaToggle = $('area-toggle');
+const areaBody = $('area-body');
+const areaMapEl = $('area-map');
+const areaEmpty = $('area-empty');
+const basemapToggle = $('basemap-toggle');
+let areaMap = null;
+let lastValidDoc = null;
+
+function hideAreaPanel() {
+  areaPanel.hidden = true;
+  areaBody.hidden = true;
+  areaToggle.setAttribute('aria-expanded', 'false');
+  areaToggle.textContent = 'Show service area';
+  basemapToggle.checked = false;
+  if (areaMap) areaMap.setBackground(false);
+  lastValidDoc = null;
+}
+
+function revealServiceArea() {
+  areaBody.hidden = false;
+  areaToggle.setAttribute('aria-expanded', 'true');
+  areaToggle.textContent = 'Hide service area';
+  if (!areaMap) areaMap = createServiceAreaMap(areaMapEl);
+  areaMap.invalidate(); // container just became visible
+  const drawn = areaMap.render(lastValidDoc);
+  areaEmpty.hidden = drawn > 0;
+}
+
+areaToggle.addEventListener('click', () => {
+  if (areaBody.hidden) {
+    revealServiceArea();
+  } else {
+    areaBody.hidden = true;
+    areaToggle.setAttribute('aria-expanded', 'false');
+    areaToggle.textContent = 'Show service area';
+  }
+});
+
+basemapToggle.addEventListener('change', () => {
+  if (areaMap) areaMap.setBackground(basemapToggle.checked);
+});
 
 // Populate the version dropdown (keyed by schema version; v0.1.0 today).
 for (const v of VERSION_IDS) {
@@ -24,6 +71,7 @@ for (const v of VERSION_IDS) {
 function clearResult() {
   result.className = '';
   result.textContent = '';
+  hideAreaPanel();
 }
 
 function showError(text) {
@@ -35,13 +83,16 @@ function showError(text) {
   result.appendChild(banner);
 }
 
-function showPass() {
+function showPass(doc) {
   result.className = 'pass';
   result.textContent = '';
   const banner = document.createElement('p');
   banner.className = 'banner';
   banner.textContent = 'PASS — valid against the MSD JSON Schema.';
   result.appendChild(banner);
+  // After a PASS, offer the service-area preview — collapsed by default.
+  lastValidDoc = doc;
+  areaPanel.hidden = false;
 }
 
 function showFail(messages) {
@@ -84,7 +135,7 @@ function runValidate() {
   }
 
   if (outcome.valid) {
-    showPass();
+    showPass(doc);
   } else {
     showFail(formatErrors(outcome.errors));
   }
