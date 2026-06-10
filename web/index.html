@@ -64,6 +64,13 @@
         cursor: pointer;
       }
       button:hover { filter: brightness(0.95); }
+      button.secondary {
+        background: #fff;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        font-size: 0.95rem;
+        padding: 0.45rem 1.1rem;
+      }
       #result { margin-top: 1.5rem; }
       #result .banner { font-weight: 600; padding: 0.6rem 0.9rem; border-radius: 6px; margin: 0 0 0.5rem; }
       #result.pass .banner { background: var(--pass-bg); color: var(--pass-fg); }
@@ -79,6 +86,17 @@
         padding: 0.3rem 0.6rem;
         border-bottom: 1px solid #eee;
       }
+      #area-panel { margin-top: 1.5rem; }
+      #area-body { margin-top: 0.75rem; }
+      .map-controls { margin-bottom: 0.6rem; font-size: 0.9rem; }
+      .map-controls label { display: inline-flex; align-items: center; gap: 0.4rem; }
+      #area-map {
+        height: 420px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #eef0f2; /* neutral background when no basemap is loaded */
+      }
+      #area-empty { font-size: 0.9rem; color: var(--muted); }
       footer {
         margin-top: 3rem;
         font-size: 0.82rem;
@@ -116,6 +134,30 @@
     <button id="validate-btn" type="button">Validate</button>
 
     <div id="result" aria-live="polite"></div>
+
+    <section id="area-panel" hidden>
+      <button id="area-toggle" type="button" class="secondary" aria-expanded="false">
+        Show service area
+      </button>
+      <div id="area-body" hidden>
+        <div class="map-controls">
+          <label>
+            <input type="checkbox" id="basemap-toggle" />
+            Load background map
+          </label>
+        </div>
+        <div id="area-map"></div>
+        <p id="area-empty" class="assurance" hidden>
+          This file declares no map geometry to display.
+        </p>
+        <p class="assurance">
+          The service area is drawn from the validated file in your browser. No background
+          map is loaded unless you choose to — your file and the area's location stay in
+          your browser by default. Constraints (e.g. excluded sub-areas) are not drawn, so
+          this shows the declared service area, not net coverage.
+        </p>
+      </div>
+    </section>
 
     <footer>
       A client-side schema-conformance check, in the spirit of the openly hosted
