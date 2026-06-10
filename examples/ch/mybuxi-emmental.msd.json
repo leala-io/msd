@@ -1,24 +1,32 @@
 {
   "msd_version": "0.1.0",
-  "last_updated": "2026-03-09T00:00:00Z",
+  "last_updated": "2026-06-10T00:00:00Z",
   "ttl": 86400,
 
-  "_comment": "EXAMPLE FILE — based on publicly available data from mybuxi.ch/emmental (accessed 2026-03-09) and the stop list PDF dated 2026-02-01. Provider IDs and legal entity details are illustrative. This file serves as a real-world stress test for the MSD-CH data model.",
+  "_comment": "EXAMPLE FILE — based on publicly available data from mybuxi.ch/emmental (accessed 2026-03-09, re-verified 2026-06-10) and the stop list PDF dated 2026-02-01 (335 stops). Provider IDs are illustrative. This file serves as a real-world stress test for the MSD data model and as the engine round-trip input.",
+
+  "_file_revision": {
+    "revision": "2026-06-10",
+    "changes": [
+      "K1: booking_channels corrected — 'phone' removed. Per mybuxi FAQ, phone booking exists only in the Herzogenbuchsee region (EBuxi), not in Emmental. Channels: app (primary), email (groups/special destinations).",
+      "K2: legal_entity corrected — operator is Verein mybuxi Emmental (independent legal entity, Bürgerbus model). mybuxi AG acts as platform/IT service provider under a Leistungsvereinbarung (service agreement), not as the operating entity.",
+      "K3: mybuxi-Card added as discount_card product (CHF 50/year) and as fourth eligibility criterion. The card is the operative credential activating reduced fares; purchase is restricted to residents of co-funding municipalities and association members.",
+      "K4: stop count source precision — 335 stops per official stop list PDF dated 2026-02-01 (newer than the 2025-09-01 list referenced on the region page)."
+    ],
+    "structural_note": "booking_channels uses the §3 string-array shape and operating_hours.exceptions uses the §3 date-based shape, per frozen schema v0.1.0. Richer shapes (channel objects, rule-based recurring exceptions) are documented v0.2.0 candidates."
+  },
 
   "_schema_notes": {
-    "identified_gaps": [
-      "FARE CONDITIONALITY: MSD v0.1.0 lacks a mechanism for conditional fare lists based on user group membership (Vereinsmitglied, Gemeindezugehörigkeit, Partner). The two-list system (grüne/rote Liste) requires a fare_group or fare_eligibility concept that scopes entire fare structures to user categories beyond simple discounts.",
-      "GROUP PRICING: The 'rote Liste' charges per trip for up to 6 persons (CHF 25-40). MSD has no concept of group fares where a single price covers multiple passengers.",
-      "SUBSCRIPTION PRODUCTS: Tageskarte, 10er-Karte, Monatsabo, Jahresabo (personal and transferable) are product types not modelled in MSD. The current fare_structures model covers single-trip pricing but not subscription/pass products.",
-      "PARTNER TARIFF: Trips to/from partner locations have a fixed reduced fare (CHF 5/10). This is a location-conditional fare not expressible in the current zone-crossing model.",
-      "STOP-BASED SERVICE AREA: mybuxi operates 335 named stops, not zone polygons. MSD service_area.type supports 'zones' but the stop-list model needs validation.",
-      "COMMUNITY FUNDING MODEL: The distinction between publicly co-funded municipalities (Affoltern, Heimiswil) and non-funded municipalities drives the entire fare structure. This is a governance/funding dimension not modelled in MSD.",
-      "HALBTAX/GA NON-ACCEPTANCE: mybuxi explicitly does NOT accept Swiss PT credentials. MSD needs a way to declare credential non-acceptance, not just acceptance."
+    "extensions_in_use": "This file uses 9 extension objects beyond Concept Paper §3 (swiss_profile, products, eligibility, partners, safety, sales_points, credential_acceptance, multi_stop, group_booking), tolerated by the open v0.1.0 schema and tracked in docs/v0.2.0-candidates.md.",
+    "out_of_scope_observations": [
+      "Free annual pass for 18-year-olds resident in Affoltern i.E./Heimiswil — entitlement allocation process, not a service description; out of MSD scope.",
+      "Stop-point economy (members free; private rental CHF 300/yr; companies from CHF 1'200/yr) — stop ownership/sponsoring model, out of MSD scope; documented for completeness.",
+      "Public-holiday rule 'Sonn- & Feiertage: Sonntagsbetrieb' — recurring rule-based exceptions are a v0.2.0 candidate; v0.1.0 expresses exceptions as concrete dates only (see operating_hours._comment)."
     ]
   },
 
   "provider": {
-    "provider_id": "ch:1:sboid:100342",
+    "provider_id": "ch-mybuxi-emmental",
     "name": "mybuxi Emmental",
     "description": "On-demand community transport service in the Emmental region, operated by volunteers",
     "url": "https://mybuxi.ch/emmental/",
@@ -26,17 +34,17 @@
     "country": "CH",
     "languages": ["de", "fr", "it", "en"],
     "legal_entity": {
-      "name": "mybuxi AG",
-      "registration_id": "CHE-XXX.XXX.XXX",
+      "name": "Verein mybuxi Emmental",
+      "registration_id": null,
       "vat_id": null,
-      "_comment": "mybuxi AG is the parent company; day-to-day operations in Emmental are managed by Verein mybuxi Emmental"
+      "_comment": "Operator and legal carrier of the service (independent association, Bürgerbus model). mybuxi AG (Bernapark 28, CH-3066 Deisswil Stettlen) provides the IT system (passenger app, driver app), project and operations management, and usage analytics under a Leistungsvereinbarung. Registration/VAT IDs not publicly documented (C1: null = explicitly unknown)."
     },
     "swiss_profile": {
-      "go_nummer": "100342",
-      "sboid": "ch:1:sboid:100342",
+      "go_nummer": null,
+      "sboid": null,
       "tu_verzeichnis": false,
       "konzession_typ": null,
-      "_comment": "mybuxi Emmental is not concessioned (keine Konzession). Not subsidised by canton or federal government. Funded by fare revenue, municipal contributions (Affoltern, Heimiswil), and private partners."
+      "_comment": "mybuxi Emmental is not concessioned. Not subsidised by canton or federal government (no RPV eligibility). Funded by fare revenue (~50%), private partners/sponsors (~30%), and municipal contributions from Affoltern i.E. and Heimiswil (~20%). SBOID/GO numbers not assigned (C1: null = explicitly unknown/not applicable)."
     }
   },
 
@@ -119,7 +127,7 @@
             "coordinates": { "lat": 47.10482, "lon": 7.66325 }
           }
         ],
-        "_comment": "Full stop list (335 stops) available at stops_url. Stops are grouped by municipality prefix (AF=Affoltern, BU=Burgdorf, DÜ=Dürrenroth, HA=Hasle, HE=Heimiswil, LÜ=Lützelflüh, OB=Oberburg, RÜ=Rüegsau, SU=Sumiswald, WY=Wynigen). Stops marked with * in the original list are partner or key stops."
+        "_comment": "Full stop list (335 stops, source: PDF 2026-02-01 — newest official list; the region page additionally references a list dated 2025-09-01) at stops_url. Stop IDs are provider-scoped and stable (mybuxi:<municipality-prefix>:<name>). Municipality prefixes: AF, BU, DÜ, HA, HE, LÜ, OB, RÜ, SU, WY. Full-list-via-stops_url ingestion is a v0.2.0 candidate."
       },
       "vehicles": [
         {
@@ -174,7 +182,8 @@
           { "type": "municipality_residence", "municipalities": ["Affoltern i.E.", "Heimiswil"] },
           { "type": "membership", "organisation": "Verein mybuxi Emmental" },
           { "type": "membership", "organisation": "any mybuxi Verein" },
-          { "type": "partner_trip", "description": "Trip origin or destination is a partner stop" }
+          { "type": "partner_trip", "description": "Trip origin or destination is a partner stop" },
+          { "type": "credential", "credential": "mybuxi-card", "_comment": "K3: the mybuxi-Card (see products: mybuxi-card-2026) is the operative credential; it can only be purchased by residents of the two co-funding municipalities or association members (CHF 50/year)." }
         ]
       },
       "rules": [
@@ -296,6 +305,15 @@
           "price": 1499.00,
           "transferable": true,
           "_comment": "Holders of unpersönliches Jahresabo receive a free stop at their address"
+        },
+        {
+          "product_id": "mybuxi-card-2026",
+          "name": "mybuxi-Card",
+          "type": "discount_card",
+          "price": 50.00,
+          "validity_days": 365,
+          "transferable": false,
+          "_comment": "K3: credential-generating product. Activates reduced fares on single trips, day tickets, and 10-ride cards. Purchase restricted to residents of Affoltern i.E./Heimiswil and members of Verein mybuxi Emmental. New product type 'discount_card' — products is an extension object (v0.2.0 candidate), so the type vocabulary is file-scoped, not registry-bound."
         }
       ],
       "discounts": [
@@ -456,7 +474,8 @@
       "free_cancellation_minutes": null,
       "late_cancellation_fee": null
     },
-    "booking_channels": ["app", "phone", "email"],
+    "booking_channels": ["app", "email"],
+    "_booking_channels_comment": "K1 correction: 'phone' removed. Per mybuxi FAQ, phone booking is available only in the Herzogenbuchsee region (EBuxi, 076 761 90 90), not in Emmental. App is the primary channel; email (emmental@mybuxi.ch) serves group bookings and not-yet-served destinations. Channel-object shape with per-channel metadata is a v0.2.0 candidate.",
     "_booking_channels_detail": {
       "_comment": "MSD v0.1.0 models booking_channels as a code-list string array (Concept Paper §3.6). The richer per-channel detail below is retained as a non-normative extension and logged as a v0.2.0 candidate (docs/v0.2.0-candidates.md §B.1).",
       "app": { "url": "https://mybuxi.ch/fahrgaeste/#App" },

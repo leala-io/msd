@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/) (see `VERSIONING.md`).
 
+## [Unreleased]
+
+### Fixed
+- examples/ch/mybuxi-emmental: source-verified corrections — operator legal entity is Verein mybuxi Emmental (platform provider documented in comments); booking channels corrected to app + email; mybuxi-Card added as discount-card product with matching eligibility credential; provider identifier corrected to a provider-scoped id (no SBOID/GO number — service is non-concessioned, per Appendix D.1 fallback guidance); stop-list source precision (335 stops, 2026-02-01 list); schema notes updated to current extensions/out-of-scope documentation.
+
 ## [0.1.1] - 2026-06-08
 
 ### Added
