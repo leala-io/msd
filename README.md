@@ -63,6 +63,7 @@ The hosted and CLI validators share one validation core, so they always agree. B
 | [MSD ↔ NeTEx comparison](docs/comparison-netex.md) | How MSD's provider layer relates to the NeTEx system layer |
 | [Coverage & gap matrix](docs/coverage-gap-matrix.md) | What v0.1.0 expresses vs. recorded v0.2.0 candidates |
 | [MSD → GTFS-Flex engine](engine/adapters/gtfs-flex/) | Generates a GTFS-Flex discovery feed from an MSD file |
+| [Producer flow (schematic, non-normative)](docs/design/producer-flow.md) | Reference data path from self-description to validated file (illustrative phone screens) |
 
 ## Status
 
