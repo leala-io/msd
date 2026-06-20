@@ -25,6 +25,10 @@ named operator. No live data was fetched and no external GTFS feed was used as a
 Attribution is to the general informal-transport literature and the general standards landscape (JSON Schema, SemVer).
 Values in the example are realistic-but-illustrative, not measured.
 
+Cross-corpus corroboration (SSATP/World Bank, WRI/IDB-LATAM, ITF 2022, Grafigéo, the SSA accessibility cluster, NCHRP,
+TCQSM, MLIT, and the FTA MOD Sandbox) is recorded per finding in *Corroborating sources per finding* below —
+page-precise where the underlying analysis pins it, paraphrase-only for the CC-IGO-licensed WRI/IDB monograph.
+
 ## Matrix
 
 | # | Documented feature (source) | MSD v0.1.0 field | Fit | Notes |
@@ -58,7 +62,85 @@ Values in the example are realistic-but-illustrative, not measured.
 These needs-extension items are recorded in [`v0.2.0-candidates.md`](v0.2.0-candidates.md) §D. They are **candidates for a
 future Concept Paper revision and v0.2.0 schema**, not defects to patch in v0.1.0.
 
+## Requirement-class → MSD coverage (standing view)
+
+A standing view of how the recurring service-requirement classes documented across the rural / informal-transport
+corpus map onto MSD v0.1.0 coverage, independent of any single example. Drawn from the eight rural-mobility barriers in
+Milne et al. 2026 (Fig. 5, p. 55), cross-checked against the NCHRP rural-checklist mapping, and framed by the ITF (2022)
+finding that no standard or framework yet exists for rural service-data formats (p. 40) and its recommendation to set
+such standards and support small operators with machine-readable data (p. 45).
+
+| Requirement class | Representative source | MSD v0.1.0 | Character |
+|---|---|---|---|
+| Scheduling / operating times | Milne B01; ITF-199 | `operating_hours` | expressible |
+| Routes & stops / service area | Milne B02 | `service_area` (`stops`, `municipalities`) | expressible |
+| Connecting-service visibility | Milne B03 | `service_area` + `references` | partially — gap made visible, not closed |
+| Service information / discoverability | Milne B06 | the MSD file itself (upstream substrate) | core addressee — but `declare ≠ last-mile UX` |
+| Vehicle suitability / accessibility | Milne B07; SSA / TCQSM | `vehicles[].capacity` | partially — low-floor / boarding flag gated |
+| Bike carriage | Milne B08 | — | gated coverage checkpoint |
+| Unsafe active travel / road infrastructure | Milne B04 | — | out of scope — infrastructure, not a service attribute |
+| Standard / framework for service data | ITF 2022, pp. 40, 45 | MSD as the declarative layer | the gap MSD addresses (`declare`) |
+
+Reading: the description layer addresses the information / discoverability and service-shape classes directly, makes
+connection gaps visible, and is explicitly *not* the solution to road-infrastructure or last-mile-UX classes.
+`declare ≠ compute / enforce / regulate / measure` throughout.
+
+## Corroborating sources per finding
+
+The needs-extension findings above are corroborated across the wider informal- / paratransit-transport corpus. This
+records the cross-corpus evidence per finding (source-level, page-precise where the underlying analysis pins it); it
+adds **no new candidate and changes no status** — every finding remains a gated v0.2.0 candidate in
+[`v0.2.0-candidates.md`](v0.2.0-candidates.md) §D / §F. Citations route through tier-1 primary sources (Kumar et al.
+2021 SSATP; Tun et al. 2020 WRI) rather than secondary summaries. The WRI/IDB monograph (Tun et al. 2020) is
+CC-IGO BY-NC-ND 3.0 IGO — paraphrase and page-cite only, no figure/table reproduction.
+
+| Finding | Corroborating sources (page-precise where pinned) |
+|---|---|
+| Fill-and-go / no-booking departure | ITF-199; GIZ (fill-and-go as the standard, not exceptional, mode); SSATP/Kumar 2021 (p. 105); WRI/IDB/Tun 2020 (unscheduled departures, "war of the penny"; pp. 14, 38, 41) |
+| Hail-and-ride / board-anywhere | ITF-199; Grafigéo (*garages de clandos* line organisation, ch. 2) |
+| Organisation type (SACCO / cooperative / route-owner) | GIZ (SACCOs, GIEs, TOCs); SSATP/Kumar 2021 (unions/associations, EIGs; pp. 38 f., 90 f., 106 f.) incl. Cars-Rapides Dakar (Kumar & Diou 2010, EIG + ticketing); Grafigéo (rickshaw syndicates, *courtiers de fret*; ch. 2/5/6); Oviedo/Bogotá (route owners, exclusive territories) |
+| Dynamic / negotiated pricing | ITF-199; GIZ ("ratchet effect"); SSATP/Kumar 2021 (p. 62); Oviedo/Bogotá; Grafigéo (broker-mediated *boutres* fares, ch. 6 — weak) |
+| Informal settlement (daily target/fee, dues) | ITF-199; GIZ (daily-target model); SSATP/Kumar 2021 (pp. 62 f.) |
+| Safety profile | ITF-199; GIZ (safety as a primary reform target); SSATP/Kumar 2021 (pp. 62 f.) |
+
+Two further dimensions appear in the corpus but are **not** opened as new rows here (consistent with the freeze): a
+**semiformal / licence-status** signal (Grafigéo ch. 2/4/5 — *entre-deux*, unlicensed *clandos*, VTC *flou juridique*;
+SSATP/Kumar 2021 p. 27), which the hypothetical *licensed* SACCO example does not surface, and **multi-purpose
+(passenger + freight)** use (SSATP/Kumar 2021 p. 26), a long-term scope item — see the goods scope-boundary note below.
+
+## Cross-corpus coverage evidence (measurement & discovery layers)
+
+Two cross-corpus observations corroborate *why* the description layer is the missing piece, without adding coverage
+gaps to the matrix:
+
+- **Measurement layer (SSA accessibility cluster).** Objective accessibility computed with standard routing engines
+  (e.g. OpenRouteService / OSM) underestimates user-reported travel time by 50–133 % across activity types in informal
+  SSA contexts (Dumedah et al. 2024), because such engines omit access, waiting and egress time — three components a
+  service description can supply (`declare ≠ compute`: MSD feeds an engine, it does not route). A 2025 systematic
+  review of 48 African accessibility studies confirms operational data for unscheduled, route-less informal services
+  are largely non-existent or uncapturable (Asuah & Acheampong 2025); Kampala is among the GTFS/DT4A-mapped cities
+  where stops and routes exist but service depth does not — the direct bridge to the example above. This is a scope
+  demarcation, not a schema candidate.
+- **Discovery layer (FTA MOD Sandbox — VTrans 0150 / TriMet 0170).** Two independent US federal evaluations document
+  the same boundary: GTFS-Flex + OpenTripPlanner provide discovery (a flexible service can be *shown*) but not
+  transaction (it cannot be *booked* through the planner) — the transactional service description stays external. This
+  is a Category-A confirmation of the declare (MSD) → discover (GTFS-Flex export) → transact (external) positioning,
+  not a coverage gap; recorded here as cross-corpus context (US pillar).
+
+## Scope boundary — goods / freight (not a coverage gap)
+
+**Goods / freight carriage** — *out of scope (deliberate boundary), not a coverage gap.* Conceptually anchored in the
+rural-MaaS service class (people-and-goods); absent as a lived data service across data models, pilots, and informal
+practice. Re-entry path documented in the candidate pool ([`v0.2.0-candidates.md`](v0.2.0-candidates.md) §F); gated.
+Sources: Eckhardt 2018/2020; EU MaaS-Alliance 2017; Milne et al. 2026; MLIT Guidelines; ITF (2022) (regulatory-status
+axis); ITF *Mix and MaaS* No. 113 (goods distribution framed outside MaaS data architecture); ITF urban-freight
+cluster No. 131/109/195 (freight = separate domain with its own data stack); EN 17860 Part 6 / IEC 63281-1
+(mixed-purpose handled at the vehicle-standard level).
+
 ## Related issues
 
-The needs-extension findings relate to the open coverage issues **#4, #5, #6, #14** (informal-transport / international
-coverage). Exact issue-to-gap mapping to be tightened.
+The needs-extension findings are tracked as **planned coverage candidates** in
+[`v0.2.0-candidates.md`](v0.2.0-candidates.md) §D / §F, **not** as live GitHub issues. The live tracker currently holds
+only the L2 epic **#6** (output preview) and its closed spike **#5** — neither is a coverage issue. The
+informal-transport coverage issues are deliberately parked pending the post-ATRC issue-curation window; live issue
+links (with an explicit plan→live mapping) will be added here once they are filed.
