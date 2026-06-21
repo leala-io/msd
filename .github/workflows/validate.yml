@@ -12,7 +12,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install validator dependencies
         working-directory: validator
@@ -78,7 +78,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
 
       # ajv + ajv-formats for the bundle resolve from validator/node_modules
       # (the bare require lives in validator/core.js).
@@ -107,7 +107,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
 
       # esbuild bundles the engine in-test (test/engine-identity.mjs); no app build
       # or validator deps needed — the gate JSON-parses docs and diffs engine output.
