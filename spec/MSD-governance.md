@@ -33,7 +33,7 @@ These commitments are permanent and cannot be changed by any governance body:
 
 ### Phase 1: Founding (Current)
 
-During the founding phase, decisions are made by the **Project Lead** (Thomas Teichmüller, Leap and Land) in consultation with early contributors and advisors. This lightweight structure is intentional: governance formality should scale with adoption, not precede it. The founding phase ends when three conditions are met: (a) the specification reaches v1.0.0, (b) at least three independent organisations actively contribute, and (c) at least two independent implementations exist.
+During the founding phase, decisions are made by the **Project Lead** (Thomas Teichmüller, LeaLa) in consultation with early contributors and advisors. This lightweight structure is intentional: governance formality should scale with adoption, not precede it. The founding phase ends when three conditions are met: (a) the specification reaches v1.0.0, (b) at least three independent organisations actively contribute, and (c) at least two independent implementations exist.
 
 **During this phase:**
 
@@ -104,4 +104,4 @@ The Core Commitments (Section "Core Commitments") are permanent. Any proposed am
 
 *This document establishes the governance framework for MSD. It is designed to be lightweight enough for a founding-phase project while containing the structural commitments needed to ensure long-term openness. It will evolve as the community grows.*
 
-*Published: 2026-03-06 | Thomas Teichmüller | Leap and Land | CC BY-SA 4.0*
+*Published: 2026-03-06 | Thomas Teichmüller | LeaLa | CC BY-SA 4.0*
