@@ -84,7 +84,7 @@
         ],
         "stops_count": 335,
         "stops_url": "https://mybuxi.ch/wp-content/uploads/2026/01/2026-02-01-Haltepunkte_mybuxi-Emmental.pdf",
-        "_stops_note": "Representative sample of the 335-stop list (full list at stops_url, count at stops_count). Renamed from 'stops_sample' to satisfy the v0.1.0 requirement that service_area.type='stops' carry a 'stops' array (Concept Paper Appendix D.1). See docs/v0.2.0-candidates.md §C.",
+        "_stops_note": "Representative sample of the 335-stop list (full list at stops_url, count at stops_count). Renamed from 'stops_sample' to satisfy the v0.1.0 requirement that service_area.type='stops' carry a 'stops' array (Concept Paper §3.3). See docs/v0.2.0-candidates.md §C.",
         "stops": [
           {
             "stop_id": "mybuxi:AF:schaukaeserei",

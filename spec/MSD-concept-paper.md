@@ -219,6 +219,13 @@ Each service within a provider describes a distinct mobility offering:
 }
 ```
 
+A service area uses one of two spatial models, set by `service_area.type`:
+
+- **`zones`** (shown above): GeoJSON polygons (`Polygon` / `MultiPolygon`), each carrying `zone_id`, an optional `name`, and `geometry`.
+- **`stops`**: a list of named stops, for services that operate to and from a defined set of points rather than continuous areas. Each entry in the `stops` array carries `stop_id` (required), an optional `name`, and optional `coordinates` (`{ lat, lon }`).
+
+`service_area.type` is a structural discriminator (`"zones"` or `"stops"`), not an extensible code list. Either model may carry the optional `constraints` array described below.
+
 ### 3.4 Service Constraints
 
 The optional `constraints` array within `service_area` enables providers to express negative logic — relationships and conditions where service is restricted or prohibited. This addresses a real-world requirement identified through analysis of existing DRT routing systems (notably HAFAS's `*AT`-matrix and exclusive polygon model): many on-demand services operate in a region but with restrictions within certain sub-areas.
