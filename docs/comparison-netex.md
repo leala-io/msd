@@ -10,13 +10,13 @@ mybuxi is a small, zone-based demand-responsive service. The same service can be
 
 | | MSD | NeTEx |
 |---|---|---|
-| Artifact | `examples/ch/mybuxi-emmental.msd.json` — one declarative JSON file, authored by the provider | mybuxi appears inside the **national on-demand NeTEx export** *Angebotsplan NeTEx für On-Demand-Verkehre* (`netex_tt_odv`) on opentransportdata.swiss, produced centrally for **all** Swiss demand-responsive services; an illustrative single-service example also exists in the CEN-NeTEx Alternative-Modes set (see footnote 1)¹ |
+| Artifact | `examples/ch/mybuxi-emmental.msd.json` — one declarative JSON file, authored by the provider | mybuxi appears inside a **national on-demand NeTEx export** produced centrally by a national data office for **all** Swiss demand-responsive services; an illustrative single-service example also exists in the CEN-NeTEx Alternative-Modes set (see footnote 1)¹ |
 | Standard basis | MSD v0.1.0 JSON Schema (Draft 2020-12) | CEN/TS 16614 series, based on Transmodel V6.2; **Part 5** (Alternative Modes / flexible & demand-responsive services). Current production version: the **February 2026 CEN revision** of Parts 1/2/3/5; new-modes work continues in the `v2.1-wip` branch |
 | Validation | One open-source reference validator (AJV) | The full NeTEx XSD (`NeTEx_publication.xsd`) plus XML tooling |
 | Authoring | The provider edits one JSON file | Modelled in the NeTEx/Transmodel data model, typically with NeTEx expertise |
 
 ¹ **Two NeTEx representations of mybuxi.**
-   **(1) Production (primary reference).** mybuxi is part of the national on-demand NeTEx export *(Beta) Angebotsplan NeTEx für On-Demand-Verkehre* (`netex_tt_odv`), published by Geschäftsstelle SKI on opentransportdata.swiss and refreshed roughly twice a week, covering all Swiss demand-responsive services (file prefix `GE16614_01_DIVA_odv_ALL_prod_…`, i.e. CEN/TS 16614 / NeTEx). Dataset: `https://data.opentransportdata.swiss/dataset/netex_tt_odv`.
+   **(1) Production (primary reference).** mybuxi is part of a national on-demand NeTEx export, produced centrally by a national data office and refreshed roughly twice a week, covering all Swiss demand-responsive services (file naming follows CEN/TS 16614 / NeTEx).
    **(2) Illustrative.** A single-service mybuxi DRT example also exists among the CEN-NeTEx Alternative-Modes examples (`examples/functions/newModes/`), associated with the ongoing new-modes work.
 
 ## The layer relationship
@@ -54,9 +54,9 @@ This is a difference in **barrier to entry, not in ceiling**. NeTEx's comprehens
 
 **Quantified contrast (measured 2026-06-04).**
 
-> mybuxi as MSD is **one self-authored JSON file — 579 lines, 23 KB**. In NeTEx, the same service is published as part of the national on-demand export *(Beta) Angebotsplan NeTEx für On-Demand-Verkehre* — a centrally produced, twice-weekly dataset of **5.2 MB / 109,404 lines** covering **all five** Swiss demand-responsive operators. mybuxi is one of those five, explicitly referenced on roughly **1,854 lines** — already about **three times** the size of its entire self-authored MSD file.
+> mybuxi as MSD is **one self-authored JSON file — 579 lines, 23 KB**. In NeTEx, the same service is published as part of a national on-demand export — a centrally produced, twice-weekly dataset of **5.2 MB / 109,404 lines** covering **all five** Swiss demand-responsive operators. mybuxi is one of those five, explicitly referenced on roughly **1,854 lines** — already about **three times** the size of its entire self-authored MSD file.
 
-- Measured against `GE16614_01_DIVA_odv_ALL_prod_20260604091554.xml` (`netex_tt_odv`, see footnote 1): `wc -l` → 109,404; `grep -o "<Operator " | wc -l` → 5; `grep -ic "mybuxi"` → 1,854 (lines that explicitly name mybuxi — a lower bound on its footprint, not a full fragment extraction). MSD side: `wc -l examples/ch/mybuxi-emmental.msd.json` → 579.
+- Measured 2026-06-04 against the national on-demand NeTEx export file (CEN/TS 16614, see footnote 1): `wc -l` → 109,404; `grep -o "<Operator " | wc -l` → 5; `grep -ic "mybuxi"` → 1,854 (lines that explicitly name mybuxi — a lower bound on its footprint, not a full fragment extraction). MSD side: `wc -l examples/ch/mybuxi-emmental.msd.json` → 579.
 - This reflects the **entry barrier and authoring model**, not NeTEx's ceiling: 579 lines a provider writes and validates itself, versus being one operator inside a 109,404-line central artifact the provider does not author.
 - Context (not a per-service figure): Switzerland's full NeTEx *timetable* export (scheduled public transport, separate from on-demand) reaches several gigabytes, split across eight frame files (TimetableFrame, ServiceFrame, SiteFrame, ResourceFrame, ServiceCalendarFrame, CommonFrame, AccessibilityFrame, FareFrame).
 
@@ -68,7 +68,7 @@ This is a difference in **barrier to entry, not in ceiling**. NeTEx's comprehens
 ## References
 
 - NeTEx-CEN repository; CEN/TS 16614-5 (Part 5, Alternative Modes); Transmodel V6.2. NeTEx Parts 1/2/3/5 — February 2026 CEN revision.
-- *(Beta) Angebotsplan NeTEx für On-Demand-Verkehre* (`netex_tt_odv`), Geschäftsstelle SKI, opentransportdata.swiss — production NeTEx export for Swiss demand-responsive services. Cookbook: opentransportdata.swiss → NeTEx → On-Demand Services. Swiss NeTEx realisation guide: *NeTEx Core-Realisation Guide TP Suisse* (oev-info.ch).
+- A national on-demand NeTEx export (CEN/TS 16614 / NeTEx) — the production NeTEx export for Swiss demand-responsive services, produced centrally by a national data office.
 - mybuxi (Emmental, Switzerland).
 - MSD v0.1.0 JSON Schema + reference validator; `examples/ch/mybuxi-emmental.msd.json`.
 
