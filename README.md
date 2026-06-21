@@ -91,6 +91,6 @@ All contributions require a [Developer Certificate of Origin](DCO) sign-off.
 
 ## Contact
 
-MSD is initiated by [Leap and Land](https://leapandland.ch) and governed as an open community project under [LeaLa](https://leala.io).
+MSD is governed as an open community project under [LeaLa](https://leala.io).
 
 Maintainer: Thomas Teichmüller — thomas@leala.io

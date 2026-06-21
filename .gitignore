@@ -8,3 +8,4 @@ node_modules/
 # Local Claude Code config / guardrails — not for the public repo
 .claude/
 CLAUDE.md
+docs/build/
