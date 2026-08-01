@@ -6,7 +6,8 @@
 **Date:** 2026-03-06  
 **Author:** Thomas Teichmüller, LeaLa (leala.io)  
 **License:** Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)  
-**Status:** Concept Paper — Request for Comments
+**Status:** Concept Paper — Request for Comments  
+**Revision:** 2026-08-01 — GOFS scope description corrected against the published specification and schema directory. No change to the MSD data model.
 
 ---
 
@@ -14,7 +15,7 @@
 
 MSD (Mobility Service Description) is a proposed open standard that enables any mobility service provider to describe their service offering — service areas, vehicle types, fare structures, booking rules, and settlement parameters — as a single, machine-readable JSON configuration file. Unlike existing standards that require providers to operate real-time APIs, MSD is declarative: a static file that any conforming engine can interpret to discover and price a service, and to reach the channels for booking and settlement, across heterogeneous mobility services without bilateral integration.
 
-MSD fills a gap that no existing standard covers as a single declarative file: GTFS describes timetables for scheduled services, GBFS describes shared vehicle availability, GOFS lets riders discover real-time-orderable on-demand trips, TOMP-API defines booking interfaces between operators and MaaS providers, and NeTEx models public transport networks. None of these lets a small on-demand provider — such as a community bus, bike-sharing cooperative, or parking operator — publish their full service offering (area, fares, booking rules, settlement) as one file that any platform can read to discover and price the service. MSD proposes to do exactly that.
+MSD fills a gap that no existing standard covers as a single declarative file: GTFS describes timetables for scheduled services, GBFS describes shared vehicle availability, GOFS describes purely on-demand, zone-to-zone services for rider discovery, TOMP-API defines booking interfaces between operators and MaaS providers, and NeTEx models public transport networks. GOFS comes closest and already carries service zones, calendars, operating rules, vehicle types, fares and booking rules — but as a set of files with auto-discovery, limited to zone-to-zone operation, and without settlement parameters, cancellation terms, payment or tax treatment, or a legal-entity record. None of these lets a small on-demand provider — such as a community bus, bike-sharing cooperative, or parking operator — publish their complete service offering as one self-hosted file that any platform can read to discover, price, and transact against the service. MSD proposes to do exactly that.
 
 ---
 
@@ -34,7 +35,7 @@ The current mobility data standards landscape covers substantial ground but leav
 
 **Shared vehicle status** is covered: GBFS (General Bikeshare Feed Specification) describes real-time availability of shared bikes, scooters, and other vehicles at stations or in free-floating zones. GBFS 3.0 expanded to cover all shared mobility types.
 
-**On-demand discovery** is emerging: GOFS (General On-demand Feed Specification, under MobilityData stewardship since 2025) lets riders discover real-time-orderable on-demand trips. It does not carry fares, advance-booking rules, settlement, or organisational metadata — it answers "can I get a ride now?", not "what does this service offer and on what terms?"
+**On-demand discovery** is emerging: GOFS (General On-demand Feed Specification, under MobilityData stewardship since September 2025) describes purely on-demand, zone-to-zone services and lets riders discover real-time-orderable trips. Its file set carries service zones, calendars, operating rules, vehicle types, booking rules with advance-notice windows, and a fares document — the latter specified and listed in auto-discovery, though no validation schema is published for it. What GOFS does not carry is settlement parameters, cancellation terms, payment methods or tax treatment, a legal-entity record, or references to other standards; its service area is expressed as zones only, with no stop-based model, and it encodes area logic as permitted origin–destination pairs rather than as restrictions on an otherwise open area. It answers "can I get a ride now, and roughly at what price?", not "what does this service offer, and on what commercial and organisational terms?" (Scope verified against the GOFS specification and schema directory, August 2026.)
 
 **Booking interfaces** are defined: TOMP-API (Transport Operator to MaaS Provider API) specifies how a MaaS platform communicates with a transport operator to plan, book, and execute trips. OSDM (Open Sales and Distribution Model) standardises rail ticket distribution.
 
@@ -393,7 +394,7 @@ Routing hints are advisory, not mandatory. An engine may ignore them, apply them
 |----------|-------|--------|-----------------|
 | **GTFS** | Scheduled transit timetables | CSV files | MSD references GTFS feeds; covers non-scheduled services GTFS cannot describe |
 | **GBFS** | Shared vehicle availability | JSON API | MSD describes the service parameters; GBFS provides real-time status |
-| **GOFS** | Rider-facing discovery of real-time-orderable on-demand trips | JSON (MobilityData stewardship since 2025) | MSD describes the full offering (area, fares, booking rules, settlement) GOFS does not carry; an MSD file can generate a GOFS feed |
+| **GOFS** | Purely on-demand, zone-to-zone service description and rider-facing discovery | JSON file set with auto-discovery (MobilityData stewardship since 2025) | Overlapping scope: both describe zones, hours, vehicles, fares and booking rules. MSD adds settlement, cancellation, payment and tax terms, legal entity, stop-based service areas and cross-standard references, in one file rather than a feed set; an MSD file can generate a GOFS feed |
 | **NeTEx** | European public transport data exchange | XML (CEN standard) | MSD is simpler and JSON-based; NeTEx-compatible mapping is a roadmap goal |
 | **TOMP-API** | MaaS-to-operator booking API | REST API (OpenAPI) | MSD describes what TOMP-API connects to; MSD files can auto-generate TOMP operator info |
 | **OSDM** | Rail ticket distribution | REST API | MSD covers non-rail services; rail references can link to OSDM endpoints |
