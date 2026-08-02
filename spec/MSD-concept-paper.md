@@ -523,7 +523,7 @@ All MSD reference implementations and tools are published under the **GNU Affero
 | **Fare description** | Limited (Fares v2) | Pricing rules | Via booking flow | Comprehensive | Structured (rules, discounts, VAT, payment methods) |
 | **Booking support** | No | No | Yes (full lifecycle) | No | Rules only (links to booking) |
 | **Real-time data** | Via GTFS-RT | Yes (core feature) | Yes | Via SIRI | Optional reference |
-| **Governance** | Community (MobilityData) | Community (MobilityData) | Working Group (NL) | CEN/TC 278 | Open (CC BY-SA + AGPL) |
+| **Governance** | Community (MobilityData) | Community (MobilityData) | Working Group (NL) | CEN/TC 278 | Open process, single maintainer (v0.1.0) |
 | **Primary audience** | Transit agencies | Shared mobility operators | MaaS platforms | European transit | All mobility providers |
 
 ---
@@ -605,6 +605,8 @@ This mapping is intentionally at the conceptual level. MSD is a simplified, JSON
 | Credential-based discount | `fare_structures[].discounts[].conditions.requires_credential` | ENTITLEMENT REQUIRED / ENTITLEMENT PRODUCT | `EntitlementRequired` referencing `EntitlementProduct` | E.g., Swiss Halbtax maps to an ENTITLEMENT PRODUCT "ch-halbtax" which is a prerequisite for applying the DISCOUNTING RULE. |
 | Payment methods | `fare_structures[].payment_methods` | TYPE OF PAYMENT METHOD | `TypeOfPaymentMethod` | Transmodel defines this as an open enumeration |
 | VAT | `fare_structures[].vat_rate` | FARE PRICE.VatRate | `FarePrice/VatRate` | Direct mapping (NeTEx Part 3) |
+
+**Note on `conditions`.** The `conditions` object is unconstrained in schema v0.1.0 (`$defs.discount.conditions` is declared as `{"type": "object"}` with no properties). The sub-keys mapped above — `zone_crossing`, `age_min`/`age_max`, `requires_credential` — are a documented convention, not declared fields: two producers may use different names and both validate. Declaring them is tracked as a v0.2.0 candidate.
 
 ### C.6 Booking Rules
 
