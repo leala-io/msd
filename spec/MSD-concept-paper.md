@@ -512,13 +512,15 @@ All MSD reference implementations and tools are published under the **GNU Affero
 
 ## Appendix A: Comparison with Existing Approaches
 
+*This table compares MSD with the four standards it is most often measured against. GOFS is discussed in section 2. Ratings are qualitative shorthand, not scores.*
+
 | Characteristic | GTFS | GBFS | TOMP-API | NeTEx | **MSD** |
 |---|---|---|---|---|---|
-| **Service types** | Scheduled transit | Shared vehicles | Any (via API) | Scheduled transit | Any (declarative) |
+| **Service types** | Scheduled transit | Shared vehicles | Any (via API) | Scheduled transit | On-demand, flexible and informal (declarative) |
 | **Format** | CSV files | JSON endpoints | REST API (OpenAPI) | XML (CEN) | JSON file |
 | **Provider requirement** | Generate CSV files | Operate API server | Operate API server | Generate XML | Publish JSON file |
 | **Technical barrier** | Low | Medium | High | Very high | Very low |
-| **Fare description** | Limited (Fares v2) | Pricing rules | Via booking flow | Comprehensive | Comprehensive |
+| **Fare description** | Limited (Fares v2) | Pricing rules | Via booking flow | Comprehensive | Structured (rules, discounts, VAT, payment methods) |
 | **Booking support** | No | No | Yes (full lifecycle) | No | Rules only (links to booking) |
 | **Real-time data** | Via GTFS-RT | Yes (core feature) | Yes | Via SIRI | Optional reference |
 | **Governance** | Community (MobilityData) | Community (MobilityData) | Working Group (NL) | CEN/TC 278 | Open (CC BY-SA + AGPL) |
