@@ -73,7 +73,7 @@ such standards and support small operators with machine-readable data (p. 45).
 | Requirement class | Representative source | MSD v0.1.0 | Character |
 |---|---|---|---|
 | Scheduling / operating times | Milne B01; ITF-199 | `operating_hours` | expressible |
-| Routes & stops / service area | Milne B02 | `service_area` (`stops`, `municipalities`) | expressible |
+| Routes & stops / service area | Milne B02 | `service_area` (`stops` — normative; `municipalities` is an example-file extension, **not present in schema v0.1.0**) | partially — stops expressible, municipality-based areas not normative |
 | Connecting-service visibility | Milne B03 | `service_area` + `references` | partially — gap made visible, not closed |
 | Service information / discoverability | Milne B06 | the MSD file itself (upstream substrate) | core addressee — but `declare ≠ last-mile UX` |
 | Vehicle suitability / accessibility | Milne B07; SSA / TCQSM | `vehicles[].capacity` | partially — low-floor / boarding flag gated |
