@@ -1,0 +1,119 @@
+{
+  "$schema": "https://leala-io.github.io/msd/schema/v0.1.0/msd.schema.json",
+  "msd_version": "0.1.0",
+  "last_updated": "2026-10-11T00:00:00Z",
+  "ttl": 86400,
+
+  "_comment": "EXAMPLE FILE — HYPOTHETICAL. This is NOT a description of a real, named operator or stage. It models a generic Kampala motorcycle-taxi (boda-boda) stage: riders who wait at one stage and carry passengers on demand to any destination. It is the second, contrasting organisation type to examples/ug/kampala-taxi-sacco.msd.json and is built against the FROZEN v0.1.0 schema as a generalisation test of the coverage/gap matrix. Discipline differs from the SACCO example: a value is entered ONLY where a cited source states it. Where the sources are silent (fare amounts, passengers per motorcycle, operating hours, payment, helmets/safety, accessibility) the field is omitted or set to null (C1: unknown), never filled with an illustrative value. Sources: GIZ / Changing Transport (2026), National Roadmap for Paratransit Reform, Uganda section (p. 55); ITF (2025), Incorporating Informal Transport in Mobility Planning, ITF Roundtable Reports No. 199 (p. 10). Page numbers come from a text extraction and are to be verified against the PDFs in the citation pass. No stage location is declared: the stage is hypothetical and has no real position. See docs/coverage-gap-matrix.md, section 'Second organisation type'.",
+
+  "_schema_notes": {
+    "identified_gaps": [
+      "MODE (required field, forced false value): the vehicle is a motorcycle. service.mode is REQUIRED and the mode registry v0.1.0 contains only 'bus'. A schema-valid file therefore has to assert 'bus' for a motorcycle taxi. The SACCO example could at least approximate a minibus as 'bus'; here the required value is plainly false. Carried in service.mode_actual (pass-through). Fix class: registry growth (C2, additive value), but unlike 'diesel' in the SACCO example the field cannot be omitted.",
+      "SPATIAL MODEL: riders wait at a stage and serve any destination; there are no restrictions on the perimeter of operations (GIZ 2026, p. 55). service_area offers discrete 'stops' or bounded 'zones'. A stage-anchored, destination-unrestricted service fits neither: one stop states the origin but not the open destination set; a zone would assert a boundary the source explicitly denies. Modelled as one stop; the open destination set is carried in service.operational_model (pass-through).",
+      "ORGANISATION_TYPE: a stage-based collective of riders, many working on a target system for vehicle owners, with SACCOs used for financial support and a national rider union present (GIZ 2026, p. 55). Contrasts with the corridor SACCO of owner-operators. No field in provider/legal_entity. Carried in provider.organisation_type (pass-through).",
+      "LICENCE / REGISTRATION STATUS: only about half of Kampala's boda-bodas are registered (GIZ 2026, p. 55); motorcycle taxis occupy a regulatory grey area (ITF 2025, p. 10). The status of this hypothetical stage is unknown, and MSD v0.1.0 has no field to state it either way. Carried in provider.regulatory_status (pass-through).",
+      "FARES: the source states only that services can be expensive during the evening peak (GIZ 2026, p. 55); it gives no amounts. fare_rule.price is required, so no fare_structure is declared rather than inventing a price. Variability noted in services[].fare_note (pass-through).",
+      "SETTLEMENT: riders mostly work on a target system for vehicle owners (GIZ 2026, p. 55). The §3.7 settlement object does not represent this; settlement is omitted."
+    ]
+  },
+
+  "provider": {
+    "provider_id": "ug:boda-stage:hypothetical:0001",
+    "name": "Hypothetical Kampala Boda-Boda Stage",
+    "description": "Illustrative stage-based collective of motorcycle-taxi (boda-boda) riders who wait at one stage in Kampala and carry passengers on demand. Hypothetical — not a real, named stage.",
+    "country": "UG",
+    "_contact_note": "url and contact_email omitted: unknown values are represented by omission (non-nullable strings in v0.1.0).",
+    "_languages_note": "languages omitted: not stated by the cited sources for boda-boda stages.",
+    "_legal_entity_note": "legal_entity omitted: whether a stage is constituted as a legal entity is not stated in the cited sources.",
+    "organisation_type": {
+      "category": "rider_collective",
+      "model": "stage_based",
+      "financial_cooperative_use": "SACCOs used for financial support among riders and operators (GIZ 2026, p. 55)",
+      "labour_model": "target system: riders mostly remit a target to the vehicle owner (GIZ 2026, p. 55)",
+      "_comment": "PASS-THROUGH EXTENSION (not in §3). Contrast with the SACCO example: the SACCO is a corridor cooperative of owner-operators that controls route access; the stage is a base where riders wait, with no route. A national rider union exists (GIZ 2026, p. 55); this hypothetical stage asserts no affiliation. MSD v0.1.0 cannot express organisation type."
+    },
+    "regulatory_status": {
+      "registered": null,
+      "_comment": "PASS-THROUGH EXTENSION (not in §3). null = unknown (C1). About half of Kampala's boda-bodas are registered (GIZ 2026, p. 55); motorcycle taxis occupy a regulatory grey area (ITF 2025, p. 10). Relates to the existing licence-status candidate; no new candidate."
+    }
+  },
+
+  "services": [
+    {
+      "service_id": "stage-on-demand",
+      "service_type": "on_demand",
+      "_service_type_note": "The source's own words: boda-bodas 'operate on demand and can serve any destination' (GIZ 2026, p. 55). Unlike the SACCO example, 'on_demand' is not a forced placeholder here — but in MSD it presumes a booking model; this service is boarded walk-up at the stage, and no booking_rules are declared.",
+      "name": "Kampala Motorcycle-Taxi (boda-boda) Stage Service",
+      "mode": "bus",
+      "mode_actual": {
+        "value": "motorcycle_taxi",
+        "_comment": "PASS-THROUGH EXTENSION. service.mode is required and the registry v0.1.0 permits only 'bus'; the value 'bus' above is a forced, false placeholder so that the file validates. The vehicle is a motorcycle. This is the principal finding of this example."
+      },
+      "operational_model": {
+        "type": "stage_based_point_to_point",
+        "boarding": "walk_up_at_stage",
+        "destinations": "unrestricted",
+        "_comment": "PASS-THROUGH EXTENSION (not in §3). Riders operate from stages where they wait, serve any destination, and face no restrictions on the perimeter of operations (GIZ 2026, p. 55). The stops model below carries the stage, not the open destination set."
+      },
+      "fare_note": {
+        "varies_by": ["time_of_day"],
+        "_comment": "PASS-THROUGH EXTENSION. 'Can be expensive during evening peak hours' (GIZ 2026, p. 55). No amounts are stated; no fare_structure is declared because fare_rule.price is required and would have to be invented."
+      },
+      "service_area": {
+        "type": "stops",
+        "_area_note": "One hypothetical stage. No coordinates are declared (optional in v0.1.0): a hypothetical stage has no real position, and an illustrative one would be an invented value. The service area is not bounded: destinations are unrestricted (see operational_model).",
+        "stops": [
+          {
+            "stop_id": "stage:hypothetical-1",
+            "name": "Boda-boda stage (hypothetical)"
+          }
+        ]
+      },
+      "vehicles": [
+        {
+          "vehicle_type_id": "motorcycle",
+          "name": "Motorcycle taxi (boda-boda)",
+          "capacity": {
+            "seats": null,
+            "_comment": "null = unknown (C1). Passengers per motorcycle are not stated in the cited sources."
+          },
+          "count": null,
+          "_count_note": "null = unknown (C1). The source gives a city-wide figure (over 600,000 boda-bodas in Kampala in 2024, GIZ 2026, p. 55), not a per-stage count.",
+          "_propulsion_note": "Propulsion omitted: fuel type not stated for this stage; the registry contains only 'electric'. Some riders are reported willing to switch to electric motorcycles (GIZ 2026, p. 59)."
+        }
+      ]
+    }
+  ],
+
+  "references": {
+    "gtfs_feed_url": null,
+    "gbfs_feed_url": null,
+    "tomp_api_url": null,
+    "real_time_endpoint": null,
+    "info_url": null,
+    "terms_url": null,
+    "_comment": "The city's mapping feed (Transport for Cairo, 2020) covers minibus-taxi and bus routes only; no feed covers boda-bodas."
+  },
+
+  "_schema_gap_summary": {
+    "needs_extension": [
+      "mode — required field; registry has only 'bus'; a motorcycle taxi must be declared as 'bus' to validate (forced false value; fix = registry growth, C2)",
+      "spatial model for stage-anchored service with unrestricted destinations (stops: no open destination set; zones: would assert a boundary the source denies)",
+      "organisation_type — stage-based rider collective (contrasting type to the SACCO)",
+      "regulatory / registration status (existing licence-status candidate)",
+      "informal settlement — target system"
+    ],
+    "not_declared_because_not_stated": [
+      "fare amounts (fare_structure omitted: price is required)",
+      "passengers per motorcycle (capacity.seats = null)",
+      "operating hours",
+      "payment methods",
+      "safety profile (helmets, vetting)",
+      "accessibility",
+      "booking channels"
+    ],
+    "does_not_apply": [
+      "fill-and-go departure — the SACCO-specific gap does not recur: riders are hired on demand at the stage (GIZ 2026, p. 55); no fill-to-capacity departure rule is stated"
+    ]
+  }
+}

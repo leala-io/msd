@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- `examples/ug/kampala-boda-stage.msd.json`: a second informal-transport example — a hypothetical Kampala motorcycle-taxi (boda-boda) stage, contrasting with the minibus-taxi SACCO — validated against the v0.1.0 schema. Values are entered only where a cited source states them. `docs/coverage-gap-matrix.md` gains a *Second organisation type* section recording which findings generalise across the two types.
 - Producer-flow reference documentation (schematic, non-normative): docs/design/producer-flow.md
 - Web validator output preview (L2): after a PASS, a collapsed panel offers a client-side service-area map (Leaflet, no basemap by default, opt-in tiles; constraints not drawn — declared area, not net coverage) and an in-browser GTFS-Flex feed download (same pure engine core as the CLI, JSZip-bundled; valid-but-unconvertible files get a friendly message). Engine core split into a pure conversion module (engine/core/convert.js); new web-engine-identity CI gate proves the bundled engine byte-equal to the CLI engine.
 
