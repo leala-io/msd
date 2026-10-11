@@ -1,10 +1,10 @@
 {
   "$schema": "https://leala-io.github.io/msd/schema/v0.1.0/msd.schema.json",
   "msd_version": "0.1.0",
-  "last_updated": "2026-06-06T00:00:00Z",
+  "last_updated": "2026-10-11T00:00:00Z",
   "ttl": 86400,
 
-  "_comment": "EXAMPLE FILE — HYPOTHETICAL. This is NOT a description of a real, named operator. It models a generic Kampala minibus-taxi (matatu) SACCO of ~30 14-seat minibuses serving one urban corridor, constructed against the FROZEN v0.1.0 schema as an empirical stress test for the MSD coverage/gap matrix (Track E). Operational parameters (fleet size, fares, hours, fill-and-go departure, cash payment, SACCO governance, safety profile) are realistic-but-illustrative, generalised from the informal/paratransit literature — ITF Roundtable Report 199 'Informal Public Transport in the Developing World', the GIZ Sustainable Urban Transport guidance on minibus/paratransit reform, and reform-pattern studies of cities such as Bogotá (D. Oviedo et al.). No live data was fetched and no external GTFS feed was used as a value source. Place names and coordinates are approximate and illustrative only. See docs/coverage-gap-matrix.md for the feature → field → expressibility analysis and docs/v0.2.0-candidates.md for the recorded gaps.",
+  "_comment": "EXAMPLE FILE — HYPOTHETICAL. This is NOT a description of a real, named operator. It models a generic Kampala minibus-taxi (matatu) SACCO of ~30 14-seat minibuses serving one urban corridor, constructed against the FROZEN v0.1.0 schema as an empirical stress test for the MSD coverage/gap matrix (Track E). Operational parameters (fleet size, fares, hours, fill-and-go departure, cash payment, SACCO governance, safety profile) are realistic-but-illustrative, generalised from the informal/paratransit literature — ITF (2025), Incorporating Informal Transport in Mobility Planning, Roundtable Report No. 199; GIZ (2026), National Roadmap for Paratransit Reform; and reform-pattern studies of cities such as Bogotá (Oviedo et al., 2026). Which values a source states, which are derived and which are illustrative is recorded value by value in docs/coverage-gap-matrix.md, section 'Value provenance — SACCO example'. No live data was fetched and no external GTFS feed was used as a value source. Place names and coordinates are approximate and illustrative only. See docs/coverage-gap-matrix.md for the feature → field → expressibility analysis and docs/v0.2.0-candidates.md for the recorded gaps.",
 
   "_schema_notes": {
     "identified_gaps": [
