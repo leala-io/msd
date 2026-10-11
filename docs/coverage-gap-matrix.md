@@ -1,4 +1,4 @@
-# MSD coverage / gap matrix — Kampala minibus-taxi (matatu) SACCO
+# MSD coverage / gap matrix — Kampala minibus-taxi SACCO
 
 **Status:** empirical core of the ATRC track (Track E). **Schema:** frozen v0.1.0 (no change).
 **Example:** [`examples/ug/kampala-taxi-sacco.msd.json`](../examples/ug/kampala-taxi-sacco.msd.json) — **validates PASS** against
@@ -34,15 +34,15 @@ page-precise where the underlying analysis pins it, paraphrase-only for the CC-I
 |---|---|---|---|---|
 | 1 | Operator metadata (name, country, languages) | `provider.name`, `provider.country`, `provider.languages` | **expressible** | Core §3.2 fields carry directly. |
 | 2 | Fixed-corridor service with named stages (GIZ p. 54) | `service.service_area.type:"stops"` + `stops[]` | **partially expressible** | Stages carry as named stops; **route order** and the linear corridor geometry are not modelled. |
-| 3 | Hail-and-ride / board-anywhere along the line (not stated in ITF-199 or GIZ — see *Value provenance*) | — | **needs-extension** | The stops model assumes discrete boarding points; continuous on-line boarding is not representable. |
+| 3 | ~~Hail-and-ride / board-anywhere along the line~~ — **withdrawn 2026-10-11** | — | — | Not stated in ITF-199 or GIZ (see *Value provenance*); removed from the example. The row number is kept so that references to rows 4–15 stay valid. |
 | 4 | Fill-and-go departure (depart-when-full), no timetable, no booking (ITF-199 p. 9; GIZ pp. 12, 54) | `service.service_type` (registry: `on_demand` only); `booking_rules` | **needs-extension** | No registry value for fill-and-go; `service_type` set to `on_demand` as a forced placeholder; true model carried in `service.operational_model` (pass-through). `booking_rules` assume advance booking. |
 | 5 | SACCO / owner-operator cooperative governance (ITF-199 pp. 7–8; GIZ pp. 55–56) | `provider` / `provider.legal_entity` | **needs-extension** | No `organisation_type`; carried in `provider.organisation_type` (pass-through). |
 | 6 | 14-seat minibus fleet (GIZ pp. 53, 55), fleet size (illustrative) | `service.vehicles[]` (`vehicle_type_id`, `capacity.seats`, `count`) | **expressible** | Nominal seating and count carry; practical overloading is not represented (only nominal seats). |
-| 7 | Minibus-taxi (matatu) vehicle class | `service.mode` (registry: `bus` only) | **partially expressible** | Modelled as `bus`; the minibus-taxi distinction is not separately expressible (minor). |
+| 7 | Minibus-taxi vehicle class (locally "taxi"; GIZ p. 53) | `service.mode` (registry: `bus` only) | **partially expressible** | Modelled as `bus`; the minibus-taxi distinction is not separately expressible (minor). |
 | 8 | Diesel propulsion | `vehicle.propulsion` (registry: `electric` only) | **registry growth (C2)** | Adding a `diesel` value to the `propulsion` registry is routine non-breaking registry growth (Convention C2), not a structural schema extension. The optional field is omitted in the example; no value is invented. |
 | 9 | Daily operating window | `service.operating_hours.default[]` | **expressible** | Day/start/end carry. Demand-driven headways are not timetabled, hence not represented. |
 | 10 | Flat cash fare, distance-banded (short hop / full corridor) (GIZ p. 55: fares set by distance; amounts illustrative) | `fare_structure.rules[].price` + `conditions` | **partially expressible** | Representative fares carry as fixed `price`; banding via freeform `conditions`, without a formal stage/band model. |
-| 11 | Dynamic / negotiated fares (peak, weather, demand, bargaining) (ITF-199 pp. 9, 12; Oviedo; bargaining not stated in ITF-199 or GIZ — see *Value provenance*) | `fare_rule.price` (single fixed number) | **needs-extension** | Variability carried in `fare_structure.dynamic_pricing` (pass-through); `price` cannot vary by time/weather/demand or be negotiated. |
+| 11 | Dynamic fares (peak, weather, demand) (ITF-199 pp. 9, 12; GIZ p. 55; Oviedo) | `fare_rule.price` (single fixed number) | **needs-extension** | Variability carried in `fare_structure.dynamic_pricing` (pass-through); `price` cannot vary by time, weather or demand. Per-passenger bargaining was removed on 2026-10-11: not stated in the cited sources, and GIZ p. 55 describes Kampala fares as standardised per stage and origin–destination. |
 | 12 | Cash payment to conductor (ITF-199 p. 12; GIZ pp. 7, 10) | `fare_structure.payment_methods` (`cash_in_vehicle`) | **expressible** | Registry value `cash_in_vehicle` fits. |
 | 13 | SACCO revenue model (driver daily target/fee, association dues) (ITF-199 p. 12; GIZ pp. 10, 55) | `settlement` (§3.7, MaaS/platform-oriented) | **needs-extension** | The §3.7 settlement object targets platform settlement; an informal cash/daily-target model has no fitting representation. `settlement.model` omitted. |
 | 14 | Safety profile (vetting, seatbelts, overloading, incident reporting) (ITF-199 p. 12; GIZ pp. 10–12) | — | **needs-extension** | Not in §3; carried in `service.safety` (pass-through, same shape as the mybuxi example). Already recorded as candidate A.5. |
@@ -53,8 +53,8 @@ page-precise where the underlying analysis pins it, paraphrase-only for the CC-I
 - **Expressible:** operator metadata, fleet (nominal), operating window, cash payment, accessibility.
 - **Partially expressible:** corridor/stage structure (no route order), vehicle class (bus only), distance-banded fares
   (no formal band model).
-- **Needs-extension (the finding):** **fill-and-go / hail-and-ride / no-booking** departure model, **organisation_type**
-  (SACCO governance), **dynamic / negotiated pricing**, **safety profile**, and informal **settlement** model.
+- **Needs-extension (the finding):** **fill-and-go / no-booking** departure model, **organisation_type**
+  (SACCO governance), **dynamic pricing**, **safety profile**, and informal **settlement** model.
 - **Registry growth (C2, non-breaking):** **diesel propulsion** — adding a value to the `propulsion` registry is routine
   additive registry growth, not a structural schema extension.
 
@@ -74,7 +74,7 @@ accessibility features) are illustrative unless a page is given.
 | 14-seat minibus (`capacity.seats: 14`) | source | GIZ pp. 53, 55 | "14-seater minibus taxis" |
 | Fixed route, waiting at stages until full | source | GIZ p. 54 | Kampala taxis |
 | Fill-and-go departure | source | GIZ pp. 12, 54; ITF-199 p. 9 | |
-| Hail-and-ride / board anywhere along the corridor | **not found** | — | Neither source states it; GIZ p. 11 (drivers may deviate from routes to pick up passengers) is the nearest passage and is general, not Kampala-specific. Needs a source or a weaker wording |
+| Hail-and-ride / board anywhere along the corridor | **withdrawn** | — | Neither source states it; GIZ p. 11 (drivers may deviate from routes to pick up passengers) is the nearest passage and is general, not Kampala-specific. Removed from the example on 2026-10-11 |
 | Stages as named stops, two termini + two intermediate | illustrative | — | Stage count, names and coordinates are invented |
 | Fleet size `count: 30` | illustrative | — | GIZ p. 54 gives 21,000 registered taxis city-wide (KCCA, 2018), not a per-SACCO size |
 | Diesel propulsion; Toyota-Hiace-class vehicle | illustrative | — | GIZ p. 53: second-hand vehicles imported from Japan or Dubai; fuel type not stated |
@@ -86,7 +86,7 @@ accessibility features) are illustrative unless a page is given.
 | Fare amounts 1,500 / 2,000 / 3,000 / 3,500 UGX | illustrative | — | Neither source gives fare amounts |
 | Fares vary by time of day and weather | source | ITF-199 p. 9 (operators "surge" prices by weather or time of day; general) | |
 | Fares vary with demand | derived | GIZ p. 55 | Fares are revised periodically to balance supply and demand — revisions, not per-trip variation |
-| Fares negotiated per passenger with the conductor | **not found** | — | Not stated in ITF-199 or GIZ. GIZ p. 55 describes Kampala taxi fares as standardised per stage and origin–destination and revised in steps ("ratchet effect"), which sits uneasily with per-passenger bargaining. Possibly from Oviedo (Bogotá), not checked |
+| Fares negotiated per passenger with the conductor | **withdrawn** | — | Not stated in ITF-199 or GIZ. GIZ p. 55 describes Kampala taxi fares as standardised per stage and origin–destination and revised in steps ("ratchet effect"). Removed from the example on 2026-10-11 |
 | Driver remits a daily target to the owner | source | GIZ p. 55 (70,000–120,000 UGX per day, Kampala); ITF-199 p. 12 | |
 | Dues / levies to the association | source | GIZ p. 10 (membership fees or daily levies; general) | |
 | SACCO controls route access and stage order | derived, partly | ITF-199 pp. 7–8, 11; GIZ p. 56 | In Kampala, route decisions sit with stage-level associations (ITF-199) and stages are usually managed by committees (GIZ p. 56); GIZ p. 55 describes SACCOs mainly as financial support |
@@ -96,12 +96,12 @@ accessibility features) are illustrative unless a page is given.
 | Safety: informal driver vetting | derived | GIZ p. 11 | "minimal and often unchecked requirements for licensing, training" |
 | Safety: no tracking, panic button, CCTV, reporting channel | illustrative | — | Absence not stated |
 | `travel_time_factor: 1.6` | illustrative | — | Marked as an estimate in the file |
-| Vehicle class label "matatu" | **check** | ITF-199 p. 8; GIZ p. 34 | Both sources use "matatu" for Kenya; GIZ p. 53 calls the Kampala vehicles "minibus taxis (taxis)" |
+| Vehicle class label | changed | GIZ p. 53 | "Matatu" (Kenyan usage in both sources: ITF-199 p. 8, GIZ p. 34) replaced on 2026-10-11 by "minibus taxi"; in Kampala the vehicles are called "taxis" (GIZ pp. 53–54; also Ndibatya & Booysen 2020) |
 
-**Open points from this pass (not changed here):** the hail-and-ride row (matrix row 3) and per-passenger bargaining
-(row 11) have no page in ITF-199 or GIZ; the "matatu" label and the SACCO's role in route control are closer to the Kenyan
-model than to what both sources describe for Kampala. Whether to source, re-word or drop these is a content decision,
-not a citation fix.
+**Resolved on 2026-10-11:** hail-and-ride (row 3) and per-passenger bargaining (row 11) are removed from the example,
+and the Kenyan label "matatu" is replaced by "minibus taxi". **Still open:** the SACCO's role in route control is closer to
+the Kenyan model than to what both sources describe for Kampala (stage associations and committees decide routes; SACCOs
+mainly provide financial support).
 
 ## Second organisation type — boda-boda stage (generalisation test)
 
@@ -118,7 +118,7 @@ The question is whether the findings above hold for a second, contrasting organi
 | SACCO finding (above) | Boda-boda stage | Result |
 |---|---|---|
 | Fill-and-go departure, no booking (row 4) | Hired on demand at the stage (GIZ p. 54); no fill-to-capacity departure rule stated | **does not recur** — SACCO-specific |
-| Hail-and-ride along a corridor (row 3) | No corridor; riders serve any destination from a stage, with no perimeter restriction (GIZ p. 54) | **does not recur** in this form — replaced by a different spatial gap (row below) |
+| Fixed corridor with named stages (row 2) | No corridor; riders serve any destination from a stage, with no perimeter restriction (GIZ p. 54) | **does not recur** in this form — replaced by a different spatial gap (row below) |
 | Organisation type (row 5) | Stage-based rider collective; SACCOs used for financial support; target system; national rider union present (GIZ pp. 54–55) | **holds** — with a different value (rider collective vs owner-operator cooperative) |
 | Dynamic pricing (row 11) | "Can be expensive during evening peak hours" (GIZ p. 54); no amounts stated | **holds**, weaker evidence; no fare structure declared because `fare_rule.price` is required |
 | Informal settlement (row 13) | Target system: riders remit to vehicle owners (GIZ p. 55) | **holds** |
@@ -132,7 +132,7 @@ The question is whether the findings above hold for a second, contrasting organi
 | Registration / licence status | — | **needs-extension** (existing licence-status candidate) | An estimated half of Kampala's boda-bodas are registered (GIZ p. 54, ministry estimate); motorcycle taxis sit in a regulatory grey area (ITF-199 p. 10). The SACCO example did not surface this; the boda-boda case does. No new candidate. |
 
 **Reading.** Three of the SACCO findings generalise (organisation type, pricing variability, informal settlement), two
-do not (fill-and-go, corridor hail-and-ride — they are properties of the minibus-taxi form, not of informal transport as
+do not (fill-and-go departure and the fixed corridor — they are properties of the minibus-taxi form, not of informal transport as
 such), and the second type adds one sharper limitation: a required field that cannot be filled truthfully. The extension
 agenda is therefore partly type-specific; it is not one list that fits all informal services. All findings remain gated
 candidates; the schema is not changed.
@@ -172,9 +172,9 @@ CC-IGO BY-NC-ND 3.0 IGO — paraphrase and page-cite only, no figure/table repro
 | Finding | Corroborating sources (page-precise where pinned) |
 |---|---|
 | Fill-and-go / no-booking departure | ITF-199 (p. 9); GIZ (fill-and-go as the standard, not exceptional, mode; pp. 12, 54); SSATP/Kumar 2021 (p. 105); WRI/IDB/Tun 2020 (unscheduled departures, "war of the penny"; pp. 14, 38, 41) |
-| Hail-and-ride / board-anywhere | Grafigéo (*garages de clandos* line organisation, ch. 2). Not stated in ITF-199 or GIZ (checked 2026-10-11); the nearest GIZ passage is route deviation to pick up passengers (p. 11) |
+| ~~Hail-and-ride / board-anywhere~~ (withdrawn as a finding 2026-10-11, matrix row 3) | Grafigéo (*garages de clandos* line organisation, ch. 2) — kept for the record. Not stated in ITF-199 or GIZ; the nearest GIZ passage is route deviation to pick up passengers (p. 11) |
 | Organisation type (SACCO / cooperative / route-owner) | ITF-199 (Kampala stage-level associations, Nairobi SACCOs; pp. 7–8, 11); GIZ (SACCOs, GIEs, TOCs; Kenya p. 34, Uganda pp. 55–56); SSATP/Kumar 2021 (unions/associations, EIGs; pp. 38 f., 90 f., 106 f.) incl. Cars-Rapides Dakar (Kumar & Diou 2010, EIG + ticketing); Grafigéo (rickshaw syndicates, *courtiers de fret*; ch. 2/5/6); Oviedo/Bogotá (route owners, exclusive territories) |
-| Dynamic / negotiated pricing | ITF-199 (surge by weather or time of day; pp. 9, 12); GIZ ("ratchet effect"; p. 55); SSATP/Kumar 2021 (p. 62); Oviedo/Bogotá; Grafigéo (broker-mediated *boutres* fares, ch. 6 — weak) |
+| Dynamic pricing | ITF-199 (surge by weather or time of day; pp. 9, 12); GIZ ("ratchet effect"; p. 55); SSATP/Kumar 2021 (p. 62); Oviedo/Bogotá; Grafigéo (broker-mediated *boutres* fares, ch. 6 — weak) |
 | Informal settlement (daily target/fee, dues) | ITF-199 (p. 12); GIZ (daily-target model; pp. 10, 55); SSATP/Kumar 2021 (pp. 62 f.) |
 | Safety profile | ITF-199 (p. 12); GIZ (safety as a primary reform target; pp. 10–12); SSATP/Kumar 2021 (pp. 62 f.) |
 

@@ -125,7 +125,7 @@ One question per screen · plain-language labels with technical detail expandabl
 │  [ + Enter a Plus Code       ] │
 │                                │
 │  ⓘ Stages are illustrative;    │
-│    hail-and-ride between them  │
+│    their order along the route │
 │    is not expressible here.    │
 │                                │
 │  [ ← ]              [ Next → ] │
@@ -149,7 +149,7 @@ One question per screen · plain-language labels with technical detail expandabl
 │  What do you drive?            │
 │                                │
 │  Vehicle type                  │
-│  [ Minibus taxi (matatu)   ▾ ] │
+│  [ Minibus taxi            ▾ ] │
 │                                │
 │  Seats              [ 14    ]  │
 │  How many vehicles? [ 30    ]  │
@@ -169,7 +169,7 @@ One question per screen · plain-language labels with technical detail expandabl
 
 | UI element | Schema path | Example |
 |---|---|---|
-| Vehicle type | `services[0].vehicles[0].name` / `vehicle_type_id` | Minibus taxi (matatu) |
+| Vehicle type | `services[0].vehicles[0].name` / `vehicle_type_id` | Minibus taxi |
 | Seats | `…vehicles[0].capacity.seats` | 14 |
 | Count | `…vehicles[0].count` | 30; blank → `null` |
 | Fuel | `…vehicles[0].propulsion` | omitted — registry holds only `electric`; the file leaves it unset rather than asserting an inapplicable value |
@@ -253,7 +253,7 @@ One question per screen · plain-language labels with technical detail expandabl
 │                                │
 │  Booking channels (if any)     │
 │  [ ] Phone  [ ] App  [ ] Email │
-│   walk-up / hail-and-ride has  │
+│   walk-up boarding has         │
 │   no listed channel — leave    │
 │   all unticked (fill-and-go)   │
 │                                │
@@ -267,7 +267,7 @@ One question per screen · plain-language labels with technical detail expandabl
 | UI element | Schema path | Example |
 |---|---|---|
 | Advance booking | `booking_rules.advance_booking.{minimum_minutes, maximum_days}` | "No" → both `null` |
-| Channels | `booking_rules.booking_channels[]` | omitted — walk-up/hail-and-ride has no registry value; the empty field is itself the fill-and-go signal |
+| Channels | `booking_rules.booking_channels[]` | omitted — walk-up boarding has no registry value; the empty field is itself the fill-and-go signal |
 | Passenger ID | `booking_rules.passenger_identification` | `none_required` |
 
 ### 8 — Check and validate
