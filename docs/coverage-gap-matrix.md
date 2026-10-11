@@ -3,6 +3,7 @@
 **Status:** empirical core of the ATRC track (Track E). **Schema:** frozen v0.1.0 (no change).
 **Example:** [`examples/ug/kampala-taxi-sacco.msd.json`](../examples/ug/kampala-taxi-sacco.msd.json) — **validates PASS** against
 `schema/v0.1.0/msd.schema.json` with the registry resolved (AJV `Ajv2020` + `ajv-formats`).
+**Second organisation type:** [`examples/ug/kampala-boda-stage.msd.json`](../examples/ug/kampala-boda-stage.msd.json) — a hypothetical motorcycle-taxi (boda-boda) stage, used as a generalisation test; see *Second organisation type* below.
 
 This matrix takes the operational features documented for informal / paratransit minibus services and maps each to the
 MSD v0.1.0 field that carries it, then classifies the fit as **expressible**, **partially expressible**,
@@ -61,6 +62,40 @@ page-precise where the underlying analysis pins it, paraphrase-only for the CC-I
 
 These needs-extension items are recorded in [`v0.2.0-candidates.md`](v0.2.0-candidates.md) §D. They are **candidates for a
 future Concept Paper revision and v0.2.0 schema**, not defects to patch in v0.1.0.
+
+## Second organisation type — boda-boda stage (generalisation test)
+
+**Example:** [`examples/ug/kampala-boda-stage.msd.json`](../examples/ug/kampala-boda-stage.msd.json) — **validates PASS**
+against the frozen v0.1.0 schema. A hypothetical stage of motorcycle-taxi riders in Kampala, chosen to contrast with the
+corridor SACCO above. **Stricter discipline than the SACCO example:** a value is entered only where a cited source
+states it; where the sources are silent (fare amounts, passengers per motorcycle, operating hours, payment, safety,
+accessibility, stage location) the field is omitted or `null`. Sources: GIZ / Changing Transport (2026), *National
+Roadmap for Paratransit Reform*, Uganda section, p. 55; ITF (2025), *Incorporating Informal Transport in Mobility
+Planning*, Roundtable Report 199, p. 10 (page numbers from text extraction, to be verified against the PDFs).
+
+The question is whether the findings above hold for a second, contrasting organisation type or are SACCO-specific.
+
+| SACCO finding (above) | Boda-boda stage | Result |
+|---|---|---|
+| Fill-and-go departure, no booking (row 4) | Hired on demand at the stage (GIZ p. 55); no fill-to-capacity departure rule stated | **does not recur** — SACCO-specific |
+| Hail-and-ride along a corridor (row 3) | No corridor; riders serve any destination from a stage, with no perimeter restriction (GIZ p. 55) | **does not recur** in this form — replaced by a different spatial gap (row below) |
+| Organisation type (row 5) | Stage-based rider collective; SACCOs used for financial support; target system; national rider union present (GIZ p. 55) | **holds** — with a different value (rider collective vs owner-operator cooperative) |
+| Dynamic pricing (row 11) | "Can be expensive during evening peak hours" (GIZ p. 55); no amounts stated | **holds**, weaker evidence; no fare structure declared because `fare_rule.price` is required |
+| Informal settlement (row 13) | Target system: riders remit to vehicle owners (GIZ p. 55) | **holds** |
+| Safety profile (row 14) | Not stated in the cited sources | **not tested** — nothing declared |
+| Minibus as `bus` (row 7, partially expressible) | A motorcycle must be declared as `bus` | **sharpens** — see first new row |
+
+| New finding (boda-boda stage) | MSD v0.1.0 field | Fit | Notes |
+|---|---|---|---|
+| Motorcycle taxi as mode | `service.mode` (required; registry: `bus` only) | **needs value (C2), forced false meanwhile** | `mode` is required, so it cannot be omitted as `propulsion` was for diesel. A schema-valid file must declare `bus`. Verified both ways: `motorcycle_taxi` and an absent `mode` each fail validation. Fix class is additive registry growth (C2), but until then the file states a falsehood in a required field. |
+| Stage-anchored service with unrestricted destinations | `service_area` (`stops` / `zones`) | **needs-extension** | One stop states the origin, not the open destination set; a zone would assert a boundary the source denies (GIZ p. 55). |
+| Registration / licence status | — | **needs-extension** (existing licence-status candidate) | About half of Kampala's boda-bodas are registered (GIZ p. 55); motorcycle taxis sit in a regulatory grey area (ITF-199 p. 10). The SACCO example did not surface this; the boda-boda case does. No new candidate. |
+
+**Reading.** Three of the SACCO findings generalise (organisation type, pricing variability, informal settlement), two
+do not (fill-and-go, corridor hail-and-ride — they are properties of the minibus-taxi form, not of informal transport as
+such), and the second type adds one sharper limitation: a required field that cannot be filled truthfully. The extension
+agenda is therefore partly type-specific; it is not one list that fits all informal services. All findings remain gated
+candidates; the schema is not changed.
 
 ## Requirement-class → MSD coverage (standing view)
 
