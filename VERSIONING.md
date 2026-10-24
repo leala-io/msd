@@ -1,6 +1,6 @@
 # Versioning
 
-MSD follows [Semantic Versioning 2.0.0](https://semver.org/). A version is written `MAJOR.MINOR.PATCH`. Each released version corresponds to a versioned schema folder (`schema/<version>/`) and registry folder (`registry/<version>/`). Conformance (see `CONFORMANCE.md`) is always stated relative to a specific version.
+MSD follows [Semantic Versioning 2.0.0](https://semver.org/). A version is written `MAJOR.MINOR.PATCH`. Each MAJOR.MINOR line has a versioned schema folder (`schema/vX.Y.0/`) and registry folder (`registry/vX.Y.0/`). PATCH releases reuse the folders of their line and do not change their structure or validation behaviour; description text in them may be corrected. Releases 0.1.0, 0.1.1 and 0.1.2 all validate against `schema/v0.1.0/`. Conformance (see `CONFORMANCE.md`) is always stated relative to a specific version.
 
 ## What each level means for MSD
 
