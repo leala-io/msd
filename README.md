@@ -6,7 +6,7 @@
 [![CI](https://github.com/leala-io/msd/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/leala-io/msd/actions/workflows/validate.yml)
 [![Spec License: CC BY-SA 4.0](https://img.shields.io/badge/Spec-CC%20BY--SA%204.0-blue.svg)](LICENSE-SPEC)
 [![Code License: AGPL-3.0](https://img.shields.io/badge/Code-AGPL--3.0-blue.svg)](LICENSE-CODE)
-[![Status: v0.1.1-draft](https://img.shields.io/badge/Status-v0.1.1--draft-orange.svg)](CHANGELOG.md)
+[![Status: v0.1.2-draft](https://img.shields.io/badge/Status-v0.1.2--draft-orange.svg)](CHANGELOG.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20598626.svg)](https://doi.org/10.5281/zenodo.20598626)
 
 ---
@@ -67,7 +67,7 @@ The hosted and CLI validators share one validation core, so they always agree. B
 
 ## Status
 
-MSD is in its **founding phase** (v0.1.0-draft) — the specification is published as a Request for Comments. The foundation is in place and working: the v0.1.0 JSON Schema, a reference validator (CLI + [hosted](https://leala-io.github.io/msd/)), and validated examples. The producer-to-consumer path is exercised end-to-end — a validated [mybuxi example](examples/ch/mybuxi-emmental.msd.json) is read by an [MSD → GTFS-Flex engine](engine/adapters/gtfs-flex/) that emits a standard discovery feed.
+MSD is in its **founding phase** (release v0.1.2; schema and specification v0.1.0-draft) — the specification is published as a Request for Comments. The foundation is in place and working: the v0.1.0 JSON Schema, a reference validator (CLI + [hosted](https://leala-io.github.io/msd/)), and validated examples. The producer-to-consumer path is exercised end-to-end — a validated [mybuxi example](examples/ch/mybuxi-emmental.msd.json) is read by an [MSD → GTFS-Flex engine](engine/adapters/gtfs-flex/) that emits a standard discovery feed.
 
 We are actively seeking:
 
